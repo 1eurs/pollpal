@@ -11,19 +11,19 @@ const TrustSection = () => {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        pt: "10rem",
+        py: "10rem",
       }}
     >
-      <Typography variant="h3" align="center" sx={{ mb: "2rem" }}>
+      <Typography variant="subtitle2" align="center" sx={{ mb: "2rem" }}>
         TRUSTED BY OVER 2 USERS WORLDWIDE
       </Typography>
       <Grid container maxWidth={"50%"}>
         <Grid item xs>
           <Box>
-            <Typography variant="h4" align="center">
+            <Typography variant="h1" color={"info.main"} align="center">
               500k+
             </Typography>
-            <Typography variant="h6" align="center">
+            <Typography variant="h3" color={"text.secondary"} align="center">
               Users
             </Typography>
           </Box>
@@ -31,11 +31,11 @@ const TrustSection = () => {
         <Divider orientation="vertical" flexItem />
         <Grid item xs>
           <Box>
-            <Typography variant="h4" align="center">
-              6.5M+
+            <Typography variant="h1" color={"info.main"} align="center">
+              500k+
             </Typography>
-            <Typography variant="h6" align="center">
-              Polls
+            <Typography variant="h3" color={"text.secondary"} align="center">
+              Users
             </Typography>
           </Box>
         </Grid>
@@ -43,11 +43,11 @@ const TrustSection = () => {
 
         <Grid item xs>
           <Box>
-            <Typography variant="h4" align="center">
-              190M+
+            <Typography variant="h1" color={"info.main"} align="center">
+              500k+
             </Typography>
-            <Typography variant="h6" align="center">
-              Votes
+            <Typography variant="h3" color={"text.secondary"} align="center">
+              Users
             </Typography>
           </Box>
         </Grid>

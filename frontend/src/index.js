@@ -3,47 +3,20 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { green, grey, purple } from "@mui/material/colors";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#fafafa",
-    },
-    secondary: {
-      main: "#fafafa",
-    },
-    background: {
-      default: "#292941",
-      paper: "#ffffff",
-    },
-  },
-  typography: {
-    fontFamily: "Inter",
-    hero: {
-      lineHeight: 1,
-      letterSpacing: -1,
-      fontSize: "4rem",
-    },
-    subHero: {
-      lineHeight: 1,
-      letterSpacing: -1,
-      fontSize: "4rem",
-    },
-    heroText: {
-      width: "100%",
-      fontSize: "1rem",
-    },
-  },
-});
+import { themeOptions } from "./components/theme";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+const theme = createTheme(themeOptions);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline>
-        <App />
-      </CssBaseline>
-    </ThemeProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline>
+          <App />
+        </CssBaseline>
+      </ThemeProvider>
+    </LocalizationProvider>
   </React.StrictMode>
 );

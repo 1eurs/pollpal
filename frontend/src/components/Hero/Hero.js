@@ -3,7 +3,9 @@ import { Box, Button, Container, Typography } from "@mui/material";
 
 import { Link } from "react-router-dom";
 import TrustSection from "./TrustSection";
-import PollVote from "../PollVote";
+import PollOptionsVote from "../PollOptionsVote";
+import FeaturesSection from "./FeaturesSection";
+import GetStartedSection from "./GetStartedSection";
 
 const Hero = () => {
   return (
@@ -17,28 +19,31 @@ const Hero = () => {
                 flexDirection: "column",
               }}
             >
-              <Typography variant="hero" noWrap>
-                Create your poll
+              <Typography variant="Hero" noWrap>
+                Poll Crafting
               </Typography>
-              <Typography variant="subHero">in seconds</Typography>
+              <Typography variant="Hero" color={"secondary"}>
+                Made Quick
+              </Typography>
             </Box>
 
-            <Typography variant="heroText">
-              Want to ask your friends where to go friday night or arrange a
-              meeting with co-workers? Create a poll - and get answers in no
-              time.{" "}
+            <Typography variant="subtitle1">
+              Unlock the power of rapid poll creation with our user-friendly
+              platform. Design, share, and gather insights in no time.
             </Typography>
             <Link to={`create`}>
               <Button variant="contained">Create a Poll</Button>
             </Link>
           </Box>
           <Box>
-            <PollVote notitle={true} />
+            <PollOptionsVote notitle={true} />
           </Box>
         </Box>
 
         <TrustSection />
       </Container>
+      <FeaturesSection />
+      <GetStartedSection />
     </Box>
   );
 };

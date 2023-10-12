@@ -8,7 +8,9 @@ const PageTitle = ({ title, description, textAlign, variant, sx }) => {
       sx={{ textAlign: textAlign || "center", pb: "3rem", pt: "5rem", ...sx }}
     >
       <Typography variant={variant || "h1"}>{title}</Typography>
-      {description && <Typography variant="heroText">{description}</Typography>}
+      {description && (
+        <Typography variant="subtitle1">{description}</Typography>
+      )}
     </Box>
   );
 };

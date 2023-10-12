@@ -6,36 +6,39 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 const NavBar = () => {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Container>
-          <Toolbar>
-            <Typography
-              variant="h1"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                mr: 2,
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                textDecoration: "none",
-                flexGrow: 1,
-              }}
-            >
-              POLLPAL
-            </Typography>
-            <Button variant="contained">
-              <Typography variant="h2">Login</Typography>
-            </Button>
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </Box>
+    <AppBar elevation={0} position="static">
+      <Container>
+        <Toolbar>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <Box>
+              <Typography
+                variant="logo"
+                sx={{
+                  flexGrow: 1,
+                }}
+              >
+                <QueryStatsIcon fontSize="medium" />
+                PollPal
+              </Typography>
+            </Box>
+            <Box>
+              <Button>Login</Button>
+              <Button>Singup</Button>
+            </Box>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 
