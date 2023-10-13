@@ -11,13 +11,19 @@ const TrustSection = () => {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        py: "10rem",
+        py: "8rem",
       }}
     >
       <Typography variant="subtitle2" align="center" sx={{ mb: "2rem" }}>
         TRUSTED BY OVER 2 USERS WORLDWIDE
       </Typography>
-      <Grid container maxWidth={"50%"}>
+      <Grid
+        container
+        maxWidth={"70%"}
+        sx={{
+          alignItems: "center",
+        }}
+      >
         <Grid item xs>
           <Box>
             <Typography variant="h1" color={"info.main"} align="center">
@@ -28,7 +34,7 @@ const TrustSection = () => {
             </Typography>
           </Box>
         </Grid>
-        <Divider orientation="vertical" flexItem />
+        <Divider sx={{ minHeight: "10rem" }} orientation="vertical" flexItem />
         <Grid item xs>
           <Box>
             <Typography variant="h1" color={"info.main"} align="center">

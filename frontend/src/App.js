@@ -6,8 +6,8 @@ import ErrorPage from "./components/utility/ErrorPage";
 import CreateForm from "./components/CreateForm";
 import PollOptionsVote from "./components/PollOptionsVote";
 import Footer from "./components/Footer/Footer";
-import { Container } from "@mui/material";
-
+import PollMeetingVote from "./components/PollMeetingVote";
+import { MeetingDummyData } from "./components/utility/dummyData";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "vote",
     element: <PollOptionsVote />,
+  },
+  {
+    path: "meet",
+    element: <PollMeetingVote data={MeetingDummyData} />,
   },
 ]);
 

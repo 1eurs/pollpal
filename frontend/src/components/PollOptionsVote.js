@@ -7,20 +7,31 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  Hidden,
   Radio,
   RadioGroup,
   Typography,
 } from "@mui/material";
 import PageTitle from "./utility/PageTitle";
+import { useState } from "react";
 
-const PollOptionsVote = ({ notitle }) => {
+const PollOptionsVote = ({ notitle, data }) => {
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleVote = () => {
+    if (selectedOption) {
+      // brackend
+      console.log("Voted for: " + selectedOption);
+    } else {
+      console.log("Please select an option before voting.");
+    }
+  };
+
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        pb: "2rem",
       }}
     >
       <Container maxWidth="sm">
@@ -33,52 +44,30 @@ const PollOptionsVote = ({ notitle }) => {
         <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
           <CardContent>
             <FormControl>
-              <FormLabel id="title" sx={{ mb: "2rem" }}>
-                <Typography variant="h2">
-                  How easy is it to embed a Pollpal?
-                </Typography>
+              <FormLabel id="title">
+                <Typography variant="h2">{data.title}</Typography>
               </FormLabel>
 
-              <Typography variant="h6" sx={{ mb: "0.2rem" }}>
-                Make a choice:
-              </Typography>
-
+              <Typography variant="subtitle1">Make a choice:</Typography>
               <RadioGroup
-                aria-labelledby="radio-buttons-group-label"
-                defaultValue="Super easy"
-                name="Super easy"
+                name="options"
+                value={selectedOption}
+                onChange={(e) => setSelectedOption(e.target.value)}
               >
-                <FormControlLabel
-                  value="Super easy"
-                  control={<Radio />}
-                  label="Super easy"
-                />
-                <FormControlLabel
-                  value="Somewhat easy"
-                  control={<Radio />}
-                  label="Somewhat easy"
-                />
-                <FormControlLabel
-                  value="Moderate"
-                  control={<Radio />}
-                  label="Moderate"
-                />
-                <FormControlLabel
-                  value="
-                Quite difficult"
-                  control={<Radio />}
-                  label="
-                Quite difficult"
-                />
-                <FormControlLabel
-                  value="Very difficult"
-                  control={<Radio />}
-                  label="Very difficult"
-                />
+                {data.options.map((option, index) => (
+                  <FormControlLabel
+                    key={index}
+                    value={option}
+                    control={<Radio />}
+                    label={option}
+                  />
+                ))}
               </RadioGroup>
             </FormControl>
-            <Box sx={{ display: "flex", gap: "0.5rem", pt: "0.3rem" }}>
-              <Button variant="contained">Vote</Button>
+            <Box sx={{ display: "flex", gap: "0.5rem" }}>
+              <Button variant="contained" onClick={handleVote}>
+                Vote
+              </Button>
               <Button variant="contained">Results</Button>
             </Box>
           </CardContent>

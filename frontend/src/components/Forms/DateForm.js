@@ -2,24 +2,47 @@ import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Calendar } from "react-multi-date-picker";
+import { DateRangePicker } from "rsuite";
 
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 
 const DateForm = ({ datesFormData, setDatesFormData }) => {
-  const handleDateChange = (selectedDates) => {
-    setDatesFormData({ ...datesFormData, dates: selectedDates });
+  const [timeSlotCounts, setTimeSlotCounts] = useState([]);
+
+  const addTimeSlot = (dateIndex) => {
+    const newCounts = [...timeSlotCounts];
+    newCounts[dateIndex] = (newCounts[dateIndex] || 0) + 1;
+    setTimeSlotCounts(newCounts);
+  };
+
+  const handleDateChange = (newDates) => {
+    const existingData = datesFormData.data;
+    const newData = newDates.map((date) => ({
+      date,
+      times: [],
+    }));
+
+    existingData.forEach((existingDate, index) => {
+      if (newData[index]) {
+        newData[index].times = existingDate.times;
+      } else {
+        newData.push(existingDate);
+      }
+    });
+
+    setDatesFormData({ ...datesFormData, data: newData });
+  };
+
+  const handleTimeChange = (dateIndex, newTime) => {
+    const newData = [...datesFormData.data];
+    newData[dateIndex].times.push(newTime);
+    setDatesFormData({ ...datesFormData, data: newData });
   };
 
   const deleteOption = (index) => {
-    const newValues = datesFormData.dates.filter((_, i) => i !== index);
-    setDatesFormData({ ...datesFormData, dates: newValues });
+    const newData = [...datesFormData.data];
+    newData.splice(index, 1);
+    setDatesFormData({ ...datesFormData, data: newData });
   };
 
   return (
@@ -36,7 +59,7 @@ const DateForm = ({ datesFormData, setDatesFormData }) => {
             className="custom-calendar"
             inputClass="custom-input"
             multiple
-            value={datesFormData.dates}
+            value={datesFormData.data.map((item) => item.date)}
             onChange={handleDateChange}
           />
         </Box>
@@ -47,7 +70,7 @@ const DateForm = ({ datesFormData, setDatesFormData }) => {
             gap: "0.5rem",
           }}
         >
-          {datesFormData.dates.length === 0 ? (
+          {datesFormData.data.length === 0 ? (
             <Card sx={{ textAlign: "center", border: 1 }}>
               <CardContent
                 sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
@@ -62,7 +85,7 @@ const DateForm = ({ datesFormData, setDatesFormData }) => {
             <Box
               sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
             >
-              {datesFormData.dates.map((date, index) => (
+              {datesFormData.data.map((item, index) => (
                 <Card sx={{ border: 1 }}>
                   <CardContent>
                     <Box
@@ -80,7 +103,7 @@ const DateForm = ({ datesFormData, setDatesFormData }) => {
                       >
                         <Box>
                           <Typography variant="h4" key={index}>
-                            {date.format("ddd, MMMM DD, YYYY")}
+                            {item.date.format("ddd, MMMM DD, YYYY")}
                           </Typography>
                         </Box>
                         <Box>
@@ -91,17 +114,33 @@ const DateForm = ({ datesFormData, setDatesFormData }) => {
                         </Box>
                       </Box>
                       <Box>
-                        <TextField
-                          sx={{ "& input": { textAlign: "center" } }}
-                          disabled
-                          value="All-time"
-                        ></TextField>
+                        {timeSlotCounts.length === 0 ? (
+                          <Typography>All times</Typography>
+                        ) : (
+                          Array.from(Array(timeSlotCounts[index] || 0)).map(
+                            (_, slotIndex) => (
+                              <Box sx={{ py: 0.5 }}>
+                                <DateRangePicker
+                                  key={slotIndex}
+                                  appearance="default"
+                                  format="HH:mm"
+                                  ranges={[]}
+                                  style={{ width: 200 }}
+                                  onOk={(value) =>
+                                    handleTimeChange(index, value)
+                                  }
+                                />
+                              </Box>
+                            )
+                          )
+                        )}
                       </Box>
                       <Box>
                         <Button
                           startIcon={<AddIcon />}
                           size="small"
                           variant="contained"
+                          onClick={() => addTimeSlot(index)}
                         >
                           Add times
                         </Button>

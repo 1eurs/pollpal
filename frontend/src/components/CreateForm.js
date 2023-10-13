@@ -44,7 +44,7 @@ const CreateForm = () => {
   const [datesFormData, setDatesFormData] = useState({
     title: "",
     votingType: "Meeting Poll",
-    dates: [],
+    data: [],
   });
 
   const handleTitleChange = (e) => {
@@ -60,9 +60,9 @@ const CreateForm = () => {
   const handleCreatePoll = () => {
     if (optionsFormData.votingType === "Meeting Poll") {
       const pollData = {
-        title: datesFormData.title,
+        title: optionsFormData.title,
         votingType: datesFormData.votingType,
-        dates: datesFormData.dates,
+        dates: datesFormData.data,
       };
 
       console.log(pollData);
@@ -82,6 +82,7 @@ const CreateForm = () => {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
+        pb: "2rem",
       }}
     >
       <Container maxWidth="sm">
