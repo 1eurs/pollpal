@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import ClearIcon from "@mui/icons-material/Clear";
-import { Calendar } from "react-multi-date-picker";
+
+import { useDispatch } from "react-redux";
+import { createPollWithDates, createPollWithChoices } from "./redux/ pollSlice";
 
 import {
   Box,
@@ -19,7 +19,7 @@ import DateForm from "./Forms/DateForm";
 
 const VotingType = [
   {
-    value: "Multiple choice",
+    value: "multiple_choice",
     label: "Multiple choice",
   },
   {
@@ -33,22 +33,24 @@ const VotingType = [
 ];
 
 const CreateForm = () => {
+  const dispatch = useDispatch();
+
   const [isMeetingForm, setMeetingForm] = useState(false);
 
+  const [title, setTitle] = useState("");
+
   const [optionsFormData, setOptionsFormData] = useState({
-    title: "",
-    votingType: "Multiple choice",
+    votingType: "multiple_choice",
     options: ["", ""],
   });
 
   const [datesFormData, setDatesFormData] = useState({
-    title: "",
-    votingType: "Meeting Poll",
+    votingType: "meeting",
     data: [],
   });
 
   const handleTitleChange = (e) => {
-    setOptionsFormData({ ...optionsFormData, title: e.target.value });
+    setTitle(e.target.value);
   };
 
   const handleVotingTypeChange = (e) => {
@@ -57,22 +59,54 @@ const CreateForm = () => {
     setMeetingForm(selectedVotingType === "Meeting Poll");
   };
 
-  const handleCreatePoll = () => {
-    if (optionsFormData.votingType === "Meeting Poll") {
-      const pollData = {
-        title: optionsFormData.title,
-        votingType: datesFormData.votingType,
-        dates: datesFormData.data,
-      };
+  const handleCreatePoll = async (e) => {
+    e.preventDefault();
+    let pollData = {};
 
+    const dateFormatOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    };
+
+    if (isMeetingForm) {
+      pollData = {
+        question: title,
+        poll_type: "meeting",
+        dates: datesFormData.data.map((date) => ({
+          date: date.date.toLocaleString("en-US", dateFormatOptions),
+          times: date.times.map((timeRange) => ({
+            start_time: timeRange[0].toLocaleString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            }),
+            end_time: timeRange[1].toLocaleString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            }),
+          })),
+        })),
+      };
       console.log(pollData);
     } else {
-      const pollData = {
-        title: optionsFormData.title,
-        votingType: optionsFormData.votingType,
-        options: optionsFormData.options,
+      pollData = {
+        question: title,
+        poll_type: optionsFormData.votingType,
+        choices: optionsFormData.options,
       };
       console.log(pollData);
+    }
+
+    try {
+      if (isMeetingForm) {
+        await dispatch(createPollWithDates(pollData));
+      } else {
+        await dispatch(createPollWithChoices(pollData));
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -107,7 +141,7 @@ const CreateForm = () => {
                 id="outlined-basic"
                 label="Title"
                 variant="outlined"
-                value={optionsFormData.title}
+                value={title}
                 onChange={handleTitleChange}
                 fullWidth
               />
