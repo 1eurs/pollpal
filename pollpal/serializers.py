@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Poll, Choice, Vote, Date, Time
+from .models import Poll, Choice, Vote, Date, Time,DateVote
 from datetime import datetime
 
 
@@ -40,4 +40,9 @@ class DateSerializer(serializers.ModelSerializer):
     poll = PollSerializer(read_only=True)
     class Meta:
         model = Date
+        fields = '__all__'
+
+class DateVoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DateVote
         fields = '__all__'

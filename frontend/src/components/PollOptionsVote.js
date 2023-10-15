@@ -13,19 +13,78 @@ import {
 } from "@mui/material";
 import PageTitle from "./utility/PageTitle";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {
+  fetchChoices,
+  fetchDates,
+  fetchPolls,
+  fetchVotes,
+  voteInPoll,
+} from "./redux/ pollSlice";
+import { useParams } from "react-router-dom";
 
-const PollOptionsVote = ({ notitle, data }) => {
-  const [selectedOption, setSelectedOption] = useState("");
+const PollOptionsVote = ({ notitle }) => {
+  const dispatch = useDispatch();
+  const polls = useSelector((state) => state.polls.polls);
+  const choices = useSelector((state) => state.polls.choices);
+  const votes = useSelector((state) => state.polls.votes);
+  const dates = useSelector((state) => state.polls.dates);
+
+  const [voteData, setVoteData] = useState({
+    choice_id: "",
+    voter_ip: "123.34.53.1",
+  });
+
+  const { poll_id } = useParams();
+
+  useEffect(() => {
+    dispatch(fetchPolls());
+    dispatch(fetchChoices());
+    dispatch(fetchDates());
+  }, []);
+
+  useEffect(() => {
+    if (voteData.choice_id) {
+      const fetchData = async () => {
+        await dispatch(fetchVotes());
+      };
+
+      fetchData();
+    }
+  }, [dispatch, voteData]);
+
+  const selectedPoll = polls.find((poll) => poll.id === poll_id);
+  const selectedChoices = choices.filter((item) => item.poll_id === poll_id);
+  const selectedDates = dates.filter((item) => item.poll_id === poll_id);
+  const selectedVotes = votes.filter((item) => item.poll_id === poll_id);
+
+  if (!selectedPoll) {
+    return <div>Loading...</div>;
+  }
 
   const handleVote = () => {
-    if (selectedOption) {
-      // brackend
-      console.log("Voted for: " + selectedOption);
-    } else {
-      console.log("Please select an option before voting.");
+    if (!voteData.choice_id) {
+      alert("Please select a choice before voting.");
+      return;
     }
+    dispatch(voteInPoll({ ...voteData, poll_id: poll_id })).then(() => {
+      setVoteData({ ...voteData, choice_id: "" });
+    });
   };
 
+  const handleResults = () => {
+    const voteCounts = {};
+    for (const vote of selectedVotes) {
+      const choiceId = vote.choice_id;
+      if (voteCounts[choiceId]) {
+        voteCounts[choiceId]++;
+      } else {
+        voteCounts[choiceId] = 1;
+      }
+    }
+    console.log(voteCounts);
+  };
   return (
     <Box
       sx={{
@@ -45,21 +104,26 @@ const PollOptionsVote = ({ notitle, data }) => {
           <CardContent>
             <FormControl>
               <FormLabel id="title">
-                <Typography variant="h2">{data.title}</Typography>
+                <Typography variant="h2">{selectedPoll.question}</Typography>
               </FormLabel>
 
               <Typography variant="subtitle1">Make a choice:</Typography>
               <RadioGroup
                 name="options"
-                value={selectedOption}
-                onChange={(e) => setSelectedOption(e.target.value)}
+                value={voteData.choice_id}
+                onChange={(e) =>
+                  setVoteData({
+                    ...voteData,
+                    choice_id: e.target.value,
+                  })
+                }
               >
-                {data.options.map((option, index) => (
+                {selectedChoices.map((option, index) => (
                   <FormControlLabel
                     key={index}
-                    value={option}
+                    value={option.id}
                     control={<Radio />}
-                    label={option}
+                    label={option.choice_text}
                   />
                 ))}
               </RadioGroup>
@@ -68,7 +132,9 @@ const PollOptionsVote = ({ notitle, data }) => {
               <Button variant="contained" onClick={handleVote}>
                 Vote
               </Button>
-              <Button variant="contained">Results</Button>
+              <Button variant="contained" onClick={handleResults}>
+                Results
+              </Button>
             </Box>
           </CardContent>
         </Card>

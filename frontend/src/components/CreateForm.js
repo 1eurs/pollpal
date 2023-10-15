@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { createPollWithDates, createPollWithChoices } from "./redux/ pollSlice";
+import { useSelector } from "react-redux";
 
 import {
   Box,
@@ -89,7 +90,12 @@ const CreateForm = () => {
           })),
         })),
       };
-      console.log(pollData);
+      if (pollData) {
+        if (pollData.dates[0].times.length == 0)
+          pollData.dates[0].times = [
+            { start_time: "00:00", end_time: "00:00" },
+          ];
+      }
     } else {
       pollData = {
         question: title,
@@ -105,9 +111,7 @@ const CreateForm = () => {
       } else {
         await dispatch(createPollWithChoices(pollData));
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (

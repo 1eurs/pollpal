@@ -6,8 +6,9 @@ import ErrorPage from "./components/utility/ErrorPage";
 import CreateForm from "./components/CreateForm";
 import PollOptionsVote from "./components/PollOptionsVote";
 import Footer from "./components/Footer/Footer";
-import PollMeetingVote from "./components/PollMeetingVote";
 import { MeetingDummyData } from "./components/utility/dummyData";
+import PollDatesVote from "./components/PollDatesVote";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,12 +20,12 @@ const router = createBrowserRouter([
     element: <CreateForm />,
   },
   {
-    path: "vote",
+    path: "optionsVote/:poll_id",
     element: <PollOptionsVote />,
   },
   {
-    path: "meet",
-    element: <PollMeetingVote data={MeetingDummyData} />,
+    path: "datesVote/:poll_id",
+    element: <PollDatesVote />,
   },
 ]);
 
