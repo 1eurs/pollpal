@@ -1,4 +1,14 @@
 export const themeOptions = {
+  breakpoints: {
+    keys: ["xs", "sm", "md", "lg", "xl"],
+    values: {
+      xs: 0,
+      sm: 800,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
   palette: {
     type: "light",
     primary: {
@@ -43,7 +53,6 @@ export const themeOptions = {
     h4: {
       fontSize: "0.9rem",
       fontWeight: 500,
-      lineHeight: "1.34",
     },
     subtitle1: {
       fontSize: "1rem",

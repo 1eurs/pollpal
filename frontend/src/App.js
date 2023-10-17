@@ -1,39 +1,72 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import NavBar from "./components/Header/NavBar";
 import Hero from "./components/Hero/Hero";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./components/utility/ErrorPage";
 import CreateForm from "./components/CreateForm";
 import PollOptionsVote from "./components/PollOptionsVote";
 import Footer from "./components/Footer/Footer";
-import { MeetingDummyData } from "./components/utility/dummyData";
 import PollDatesVote from "./components/PollDatesVote";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Hero />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "create",
-    element: <CreateForm />,
-  },
-  {
-    path: "optionsVote/:poll_id",
-    element: <PollOptionsVote />,
-  },
-  {
-    path: "datesVote/:poll_id",
-    element: <PollDatesVote />,
-  },
-]);
+import {
+  fetchChoices,
+  fetchDateVotes,
+  fetchDates,
+  fetchPolls,
+  fetchVotes,
+} from "./components/redux/pollSlice";
+import OptionPollResults from "./components/OptionPollResutls";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPolls());
+    dispatch(fetchChoices());
+    dispatch(fetchDates());
+    dispatch(fetchVotes());
+    dispatch(fetchDateVotes());
+  }, [dispatch]);
+
+  const polls = useSelector((state) => state.polls.polls);
+  const dates = useSelector((state) => state.polls.dates);
+  const datevotes = useSelector((state) => state.polls.dateVotes);
+  const votes = useSelector((state) => state.polls.votes);
+  const choices = useSelector((state) => state.polls.choices);
+
   return (
     <>
       <NavBar />
-      <RouterProvider router={router} />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Hero />} />
+          <Route path="/create" element={<CreateForm />} />
+          <Route
+            path="/optionsVote/:poll_id"
+            element={
+              <PollOptionsVote polls={polls} choices={choices} votes={votes} />
+            }
+          />
+          <Route
+            path="/datesVote/:poll_id"
+            element={
+              <PollDatesVote polls={polls} dates={dates} votes={datevotes} />
+            }
+          />
+          <Route
+            path="/results/:poll_id"
+            element={
+              <OptionPollResults
+                polls={polls}
+                choices={choices}
+                votes={votes}
+              />
+            }
+          />
+          <Route element={<ErrorPage />} />
+        </Routes>
+      </Router>
       <Footer />
     </>
   );

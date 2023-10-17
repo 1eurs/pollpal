@@ -14,37 +14,39 @@ class PollViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def create_with_choices(self, request):
         # poll data
-        poll_data = request.data  
+        poll_data = request.data
         # get choices_data
-        choices_data = poll_data.pop('choices', [])  
+        choices_data = poll_data.pop('choices', [])
         # pass data to poll_serializer
         poll_serializer = PollSerializer(data=poll_data)
-        #if valid we save
+        
         if poll_serializer.is_valid():
             poll = poll_serializer.save()
-            #loop throuh the choices array
+            # loop through the choices array
             for choice_text in choices_data:
-                # make choice data obj and we pass poll id and text
+                # make choice data object and pass poll id and text
                 choice_data = {'poll_id': poll.id, 'choice_text': choice_text}
-                # pass it to serializer
+                # pass it to the serializer
                 choice_serializer = ChoiceSerializer(data=choice_data)
-                # valid and save
+                # validate and save
                 if choice_serializer.is_valid():
                     choice_serializer.save()
                 else:
-                    poll.delete()  
+                    poll.delete()
                     return Response(choice_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            return Response(status=status.HTTP_201_CREATED)
+            
+            response_data = {
+                'message': 'Poll with choices created successfully',
+                'poll_id': poll.id,
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
     @action(detail=False, methods=['post'])
     def create_poll_with_dates_times(self, request):
-        #poll date
         poll_data = request.data
-        #dates array
         dates_data = poll_data.pop('dates', [])
-        #pass poll data to array and save if valid
         poll_serializer = PollSerializer(data=poll_data)
         if poll_serializer.is_valid():
             poll = poll_serializer.save()
@@ -56,24 +58,33 @@ class PollViewSet(viewsets.ModelViewSet):
                 times_data = date_data.get('times', [])
                 #pass to serializer and save
                 for time_data in times_data:
-                    for time_slot in times_data:
-                        time_instance = Time.objects.create(
-                            start_time=time_slot['start_time'],
-                            end_time=time_slot['end_time']
-                        )
+                    if not time_data:
+                        start_time = '2023-10-21T00:00:00.000Z'
+                        end_time = '2023-10-21T00:00:00.000Z'
+                    else:
+                        start_time = time_data['start_time']
+                        end_time = time_data['end_time']
+
+                    time_instance = Time.objects.create(
+                        start_time=start_time,
+                        end_time=end_time
+                    )
                     date_serializer = DateSerializer(data=date_data)
                     if date_serializer.is_valid():
                         date = date_serializer.save()
                         date.times.add(time_instance)
-                    
-            return Response(status=status.HTTP_201_CREATED)
+            response_data = {
+                'message': 'Poll with choices created successfully',
+                'poll_id': poll.id,
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)        
         else:
             return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
        
 class ChoiceViewSet(viewsets.ModelViewSet):
     queryset = Choice.objects.all()
-    serializer_class = ChoiceSerializer
-
+    serializer_class = ChoiceSerializer 
+ 
 class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
@@ -103,13 +114,30 @@ class TimesViewSet(viewsets.ModelViewSet):
     queryset = Time.objects.all()
     serializer_class = TimeSerializer
 
-
-
 class DateVoteViewSet(viewsets.ModelViewSet):
     queryset = DateVote.objects.all()
     serializer_class = DateVoteSerializer
     def create(self, request):
         voter_ip = request.data.get('voter_ip')
-        poll_ip = request.data.get('poll_id')
+        poll_id = request.data.get('poll_id')
+        poll = Poll.objects.get(pk=poll_id)
 
-        raise Http404
+        date_choices = request.data.get('dateChoices')
+
+        for choice in date_choices:
+            date_id= choice.get('date_id')
+            can_attend= choice.get('can_attend')
+            date = Date.objects.get(pk=date_id)
+
+            date_vote = DateVote(
+                voter_ip=voter_ip,
+                poll_id=poll,
+                date_id=date,
+                can_attend=can_attend
+            )
+            date_vote.save()
+
+        serializer = DateVoteSerializer(date_vote)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+

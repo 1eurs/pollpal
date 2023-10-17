@@ -7,8 +7,6 @@ import PollOptionsVote from "../PollOptionsVote";
 import FeaturesSection from "./FeaturesSection";
 import GetStartedSection from "./GetStartedSection";
 
-import { HeroPollData } from "../utility/dummyData";
-
 const Hero = () => {
   return (
     <Box>
@@ -38,7 +36,7 @@ const Hero = () => {
             </Link>
           </Box>
           <Box>
-            <PollOptionsVote notitle={true} data={HeroPollData} />
+            {/* <PollOptionsVote notitle={true} data={HeroPollData} /> */}
           </Box>
         </Box>
       </Container>

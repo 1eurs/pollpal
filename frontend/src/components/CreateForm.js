@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 
 import { useDispatch } from "react-redux";
-import { createPollWithDates, createPollWithChoices } from "./redux/ pollSlice";
-import { useSelector } from "react-redux";
+import {
+  createPollWithDates,
+  createPollWithChoices,
+  fetchPolls,
+  fetchChoices,
+  fetchDates,
+  fetchDateVotes,
+  fetchVotes,
+} from "./redux/pollSlice";
+import { useNavigate } from "react-router-dom";
 
 import {
   Box,
@@ -16,7 +24,8 @@ import {
 } from "@mui/material";
 import PageTitle from "./utility/PageTitle";
 import OptionsForm from "./Forms/OptionsForm";
-import DateForm from "./Forms/DateForm";
+import SettingsPoll from "./SettingsPoll";
+import CalendarForm from "./Forms/MultiDateCalendar";
 
 const VotingType = [
   {
@@ -27,13 +36,11 @@ const VotingType = [
     value: "Meeting Poll",
     label: "Meeting Poll",
   },
-  {
-    value: "Ranking Poll",
-    label: "Ranking Poll",
-  },
 ];
 
 const CreateForm = () => {
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const [isMeetingForm, setMeetingForm] = useState(false);
@@ -45,10 +52,7 @@ const CreateForm = () => {
     options: ["", ""],
   });
 
-  const [datesFormData, setDatesFormData] = useState({
-    votingType: "meeting",
-    data: [],
-  });
+  const [datesFormData, setDatesFormData] = useState([]);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -64,54 +68,39 @@ const CreateForm = () => {
     e.preventDefault();
     let pollData = {};
 
-    const dateFormatOptions = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    };
-
     if (isMeetingForm) {
       pollData = {
         question: title,
         poll_type: "meeting",
-        dates: datesFormData.data.map((date) => ({
-          date: date.date.toLocaleString("en-US", dateFormatOptions),
-          times: date.times.map((timeRange) => ({
-            start_time: timeRange[0].toLocaleString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-            }),
-            end_time: timeRange[1].toLocaleString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-            }),
-          })),
-        })),
+        dates: datesFormData,
       };
-      if (pollData) {
-        if (pollData.dates[0].times.length == 0)
-          pollData.dates[0].times = [
-            { start_time: "00:00", end_time: "00:00" },
-          ];
-      }
     } else {
       pollData = {
         question: title,
         poll_type: optionsFormData.votingType,
         choices: optionsFormData.options,
       };
-      console.log(pollData);
     }
-
     try {
+      let response;
+      let poll_id;
       if (isMeetingForm) {
-        await dispatch(createPollWithDates(pollData));
+        console.log(pollData);
+        response = await dispatch(createPollWithDates(pollData));
+        poll_id = response.payload.poll_id;
+        dispatch(fetchPolls());
+        dispatch(fetchDates());
+        navigate(`/datesVote/${poll_id}`);
       } else {
-        await dispatch(createPollWithChoices(pollData));
+        response = await dispatch(createPollWithChoices(pollData));
+        poll_id = response.payload.poll_id;
+        dispatch(fetchPolls());
+        dispatch(fetchChoices());
+        navigate(`/optionsVote/${poll_id}`);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -167,9 +156,9 @@ const CreateForm = () => {
             </Box>
 
             {isMeetingForm ? (
-              <DateForm
-                datesFormData={datesFormData}
-                setDatesFormData={setDatesFormData}
+              <CalendarForm
+                datesWithTimeSlots={datesFormData}
+                setDatesWithTimeSlots={setDatesFormData}
               />
             ) : (
               <OptionsForm
@@ -177,22 +166,9 @@ const CreateForm = () => {
                 setOptionsFormData={setOptionsFormData}
               />
             )}
-
-            <Divider variant="middle" sx={{ my: "1rem" }} />
-            <Box sx={{ display: "flex", gap: "1rem" }}>
-              <Button
-                variant="contained"
-                sx={{ padding: "0.5rem 2rem" }}
-                onClick={handleCreatePoll}
-              >
-                Create poll
-              </Button>
-              <Button variant="contained" sx={{ padding: "0.5rem 2rem" }}>
-                Save as draft
-              </Button>
-            </Box>
           </CardContent>
         </Card>
+        <SettingsPoll handleCreatePoll={handleCreatePoll} />
       </Container>
     </Box>
   );

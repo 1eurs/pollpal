@@ -3,15 +3,6 @@ from .models import Poll, Choice, Vote, Date, Time,DateVote
 from datetime import datetime
 
 
-class CustomDateField(serializers.DateField):
-    def to_representation(self, value):
-        return value.strftime('%Y/%m/%d')
-
-    def to_internal_value(self, data):
-        try:
-            return datetime.strptime(data, '%Y/%m/%d').date()
-        except ValueError:
-            raise serializers.ValidationError("Invalid date format. Please use 'YYYY/MM/DD'.")
         
 class PollSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,7 +26,6 @@ class TimeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DateSerializer(serializers.ModelSerializer):
-    date = CustomDateField(format='%Y/%m/%d')
     times = TimeSerializer(many=True, read_only=True)
     poll = PollSerializer(read_only=True)
     class Meta:
@@ -46,3 +36,5 @@ class DateVoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = DateVote
         fields = '__all__'
+
+

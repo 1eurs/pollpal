@@ -1,11 +1,11 @@
 // rootReducer.js
 
 import { combineReducers } from "redux";
-import PollSlice from "./ pollSlice";
+import pollSlice from "./pollSlice";
 
 const rootReducer = combineReducers({
   // Other reducers here
-  polls: PollSlice,
+  polls: pollSlice,
 });
 
 export default rootReducer;

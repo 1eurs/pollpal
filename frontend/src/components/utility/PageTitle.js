@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 const PageTitle = ({ title, description, textAlign, variant, sx }) => {
   return (
     <Box
-      sx={{ textAlign: textAlign || "center", pb: "3rem", pt: "5rem", ...sx }}
+      sx={{ textAlign: textAlign || "center", pb: "1rem", pt: "3rem", ...sx }}
     >
       <Typography variant={variant || "h1"}>{title}</Typography>
       {description && (

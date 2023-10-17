@@ -9,7 +9,7 @@ import {
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 const NavBar = () => {
   return (
-    <AppBar elevation={0} position="static">
+    <AppBar elevation={0} position="static" sx={{ mb: 5 }}>
       <Container>
         <Toolbar>
           <Box

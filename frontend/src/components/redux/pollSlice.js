@@ -187,29 +187,40 @@ export const voteInDatesPoll = createAsyncThunk(
   }
 );
 
+export const fetchDateVotes = createAsyncThunk("datevotes/fetch", async () => {
+  try {
+    const response = await fetch(`${API}/api/datevotes`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to fetch choices");
+    }
+  } catch (error) {
+    throw new Error("Network error");
+  }
+});
+
 const pollSlice = createSlice({
   name: "polls",
   initialState: {
-    creatingPoll: false,
     error: null,
     polls: [],
     votes: [],
     choices: [],
     dates: [],
+    dateVotes: [],
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createPollWithDates.pending, (state) => {
-        state.creatingPoll = true;
-      })
-      .addCase(createPollWithDates.fulfilled, (state) => {
-        state.creatingPoll = false;
-      })
-      .addCase(createPollWithDates.rejected, (state, action) => {
-        state.creatingPoll = false;
-        state.error = action.error.message;
-      })
       .addCase(fetchPolls.fulfilled, (state, action) => {
         state.polls = action.payload;
         state.error = null;
@@ -226,25 +237,9 @@ const pollSlice = createSlice({
         state.dates = action.payload;
         state.error = null;
       })
-      .addCase(voteInPoll.pending, (state) => {
-        state.voting = true;
-      })
-      .addCase(voteInPoll.fulfilled, (state) => {
-        state.voting = false;
-      })
-      .addCase(voteInPoll.rejected, (state, action) => {
-        state.voting = false;
-        state.error = action.error.message;
-      })
-      .addCase(voteInDatesPoll.pending, (state) => {
-        state.voting = true;
-      })
-      .addCase(voteInDatesPoll.fulfilled, (state) => {
-        state.voting = false;
-      })
-      .addCase(voteInDatesPoll.rejected, (state, action) => {
-        state.voting = false;
-        state.error = action.error.message;
+      .addCase(fetchDateVotes.fulfilled, (state, action) => {
+        state.dateVotes = action.payload;
+        state.error = null;
       });
   },
 });

@@ -19,7 +19,7 @@ const TrustSection = () => {
       </Typography>
       <Grid
         container
-        maxWidth={"70%"}
+        maxWidth="lg"
         sx={{
           alignItems: "center",
         }}
