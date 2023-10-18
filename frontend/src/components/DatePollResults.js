@@ -5,67 +5,36 @@ import {
   CardContent,
   Container,
   Typography,
-  Divider,
-  TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchDateVotes, voteInDatesPoll } from "./redux/pollSlice";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import dayjs from "dayjs";
 import TimeDifference from "./utility/TimeDifference";
+import dayjs from "dayjs";
 import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
+import { fetchDates } from "./redux/pollSlice";
+import { useEffect } from "react";
 
-const PollDatesVote = ({ polls, dates, votes }) => {
+const DatePollResults = ({ polls, dates }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { poll_id } = useParams();
+
   const selectedPoll = polls.find((poll) => poll.id === poll_id);
   const selectedDates = dates.filter((item) => item.poll_id === poll_id);
-  const selectedVotes = votes.filter((item) => item.poll_id === poll_id);
 
-  const [voteData, setVoteData] = useState({
-    voter_ip: "123.34.53.1",
-    poll_id: poll_id,
-  });
-
-  const [selectedChoices, setSelectedChoices] = useState({});
-
-  const handleSelect = (date_id, can_attend) => {
-    setSelectedChoices((prevChoices) => ({
-      ...prevChoices,
-      [date_id]: can_attend,
-    }));
-  };
-
-  const handleVote = () => {
-    let dateChoices = [];
-    for (const date_id in selectedChoices) {
-      const obj = {
-        date_id: date_id,
-        can_attend: selectedChoices[date_id],
-      };
-      dateChoices.push(obj);
-    }
-    setVoteData({ ...voteData, dateChoices });
-    console.log(voteData);
+  console.log(selectedDates);
+  const handleRefresh = () => {
+    dispatch(fetchDates());
   };
 
   useEffect(() => {
-    dispatch(voteInDatesPoll(voteData));
-  }, [voteData]);
+    dispatch(fetchDates());
+  }, []);
 
-  const handleResults = () => {
-    dispatch(fetchDateVotes());
-    navigate(`/meetingresults/${poll_id}`);
-    console.log(selectedChoices);
+  const handleBacktoPoll = () => {
+    navigate(`/datesVote/${poll_id}`);
   };
-
-  if (!selectedPoll) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <Container maxWidth="sm">
@@ -125,56 +94,66 @@ const PollDatesVote = ({ polls, dates, votes }) => {
                     </Box>
                   </Box>
                   <Box sx={{ display: "flex", gap: 1 }}>
-                    <Button
-                      variant={
-                        selectedChoices[element.id] === true
-                          ? "contained"
-                          : "outlined"
-                      }
-                      onClick={() => handleSelect(element.id, true)}
+                    <Box
+                      bgcolor={"secondary.main"}
+                      p={2}
+                      borderRadius={2}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
                     >
-                      Agree
-                    </Button>
-                    <Button
-                      variant={
-                        selectedChoices[element.id] === false
-                          ? "contained"
-                          : "outlined"
-                      }
-                      onClick={() => handleSelect(element.id, false)}
+                      <Typography variant="h3">
+                        {element.vote_count_true}
+                      </Typography>
+                    </Box>
+                    <Box
+                      bgcolor={"secondary.main"}
+                      p={2}
+                      borderRadius={2}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
                     >
-                      Not Agree
-                    </Button>
+                      <Typography variant="h3">
+                        {element.vote_count_false}
+                      </Typography>
+                    </Box>
                   </Box>
                 </Box>
                 <Box sx={{ py: 1 }}></Box>
               </Box>
             ))
           )}
-          {selectedPoll.require_names && (
-            <Box sx={{ pb: 3 }}>
-              <TextField
-                fullWidth
-                size="small"
-                label="Name (required)"
-                placeholder="Enter your name"
-              ></TextField>
-            </Box>
-          )}
-          <Box sx={{ display: "flex", gap: "0.5rem" }}>
-            <Button variant="contained" fullWidth onClick={handleVote}>
-              Vote
+          <Box sx={{ pt: 4, display: "flex", gap: 1 }}>
+            <Button variant="contained" fullWidth onClick={handleRefresh}>
+              Refresh results
             </Button>
-            <Button variant="contained" fullWidth onClick={handleResults}>
-              Results
+            <Button
+              variant="contained"
+              color="secondary"
+              fullWidth
+              onClick={handleBacktoPoll}
+            >
+              Back to poll
             </Button>
           </Box>
         </CardContent>
       </Card>
-      <SharePoll can_share={selectedPoll.can_share} />
-      <CommentPoll allow_comments={selectedPoll.require_names} />
+      <SharePoll />
+      <CommentPoll />
     </Container>
   );
 };
 
-export default PollDatesVote;
+export default DatePollResults;
+
+// {selectedDates.map((date) => (
+//     <Box sx={{ display: "flex", gap: 2 }}>
+//       <Typography> {date.vote_count_false}</Typography>
+//       <Typography> {date.vote_count_true}</Typography>
+//     </Box>
+//   ))}

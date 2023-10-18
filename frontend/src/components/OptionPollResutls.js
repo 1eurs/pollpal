@@ -8,13 +8,11 @@ import {
   Button,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import PageTitle from "./utility/PageTitle";
 import { fetchChoices, fetchPolls } from "./redux/pollSlice";
 import { useDispatch } from "react-redux";
 import SharePoll from "./SharePoll";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import TimeDifference from "./utility/TimeDifference";
-import { green } from "@mui/material/colors";
 
 const OptionPollResults = ({ polls, choices }) => {
   const dispatch = useDispatch();
@@ -62,94 +60,80 @@ const OptionPollResults = ({ polls, choices }) => {
   }));
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Container maxWidth="sm">
-        {/* <PageTitle
-          title="Experience Live Voting"
-          description="See how easy it is to conduct a poll with live results using StrawPoll."
-        /> */}
+    <Container maxWidth="sm">
+      <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
+        <CardContent>
+          <Box sx={{ pb: 3 }}>
+            <Typography variant="h2">{selectedPoll?.question}</Typography>
+            <Typography variant="subtitle1">
+              by {selectedPoll?.created_by || "a guest"}
+              {" · "}
+              <TimeDifference date={selectedPoll?.created_at} />
+            </Typography>
+          </Box>
 
-        <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
-          <CardContent>
-            <Box sx={{ pb: 3 }}>
-              <Typography variant="h2">{selectedPoll?.question}</Typography>
-              <Typography variant="subtitle1">
-                by {selectedPoll?.created_by || "a guest"}
-                {" · "}
-                <TimeDifference date={selectedPoll?.created_at} />
-              </Typography>
-            </Box>
-
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-              {result.map((choice) => (
-                <Box>
-                  <Box
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Typography variant="subtitle1">{choice.label}</Typography>
-                    <Typography variant="subtitle1">
-                      {((choice.value / totalVoteCount) * 100).toFixed(2)}% (
-                      {choice.value} votes)
-                    </Typography>
-                  </Box>
-                  <LinearProgress
-                    variant="determinate"
-                    sx={{
-                      height: 20,
-                      "& .MuiLinearProgress-bar": {
-                        backgroundColor: choice.color,
-                      },
-                    }}
-                    value={((choice.value / totalVoteCount) * 100).toFixed(2)}
-                  />
+          <Box sx={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+            {result.map((choice) => (
+              <Box>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography variant="subtitle1">{choice.label}</Typography>
+                  <Typography variant="subtitle1">
+                    {((choice.value / totalVoteCount) * 100).toFixed(2)}% (
+                    {choice.value} votes)
+                  </Typography>
                 </Box>
-              ))}
-            </Box>
-            <Box sx={{ pt: 4, display: "flex", gap: 1 }}>
-              <Button variant="contained" fullWidth onClick={handleRefresh}>
-                Refresh results
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                fullWidth
-                onClick={handleBacktoPoll}
-              >
-                Back to poll
-              </Button>
+                <LinearProgress
+                  variant="determinate"
+                  sx={{
+                    height: 20,
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor: choice.color,
+                    },
+                  }}
+                  value={((choice.value / totalVoteCount) * 100).toFixed(2)}
+                />
+              </Box>
+            ))}
+          </Box>
+          <Box sx={{ pt: 4, display: "flex", gap: 1 }}>
+            <Button variant="contained" fullWidth onClick={handleRefresh}>
+              Refresh results
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              fullWidth
+              onClick={handleBacktoPoll}
+            >
+              Back to poll
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+      <Box sx={{ pt: 4 }}>
+        <Card>
+          <CardContent>
+            <Box>
+              <PieChart
+                sx={{
+                  [`& .${pieArcLabelClasses.root}`]: {
+                    fill: "white",
+                  },
+                }}
+                series={[
+                  {
+                    data: result,
+                  },
+                ]}
+                maxWidth="100%"
+                height={200}
+              />
             </Box>
           </CardContent>
         </Card>
-        <Box sx={{ pt: 4 }}>
-          <Card>
-            <CardContent>
-              <Box>
-                <PieChart
-                  sx={{
-                    [`& .${pieArcLabelClasses.root}`]: {
-                      fill: "white",
-                    },
-                  }}
-                  series={[
-                    {
-                      data: result,
-                    },
-                  ]}
-                  maxWidth="100%"
-                  height={200}
-                />
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
-        <SharePoll />
-      </Container>
-    </Box>
+      </Box>
+      <SharePoll />
+    </Container>
   );
 };
 

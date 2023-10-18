@@ -84,27 +84,29 @@ class PollViewSet(viewsets.ModelViewSet):
 class ChoiceViewSet(viewsets.ModelViewSet):
     queryset = Choice.objects.all()
     serializer_class = ChoiceSerializer 
+    
  
 class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
 
     def create(self, request):
+        voter_ip = request.META.get('REMOTE_ADDR')
+        request.data['voter_ip'] = voter_ip
         serializer = VoteSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
 
 class PollVotesListViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = VoteSerializer
-
     def get_queryset(self):
         poll_id = self.kwargs.get('poll_id')
         if poll_id:
             return Vote.objects.filter(poll_id=poll_id)
         raise Http404
+
  
 class DatesViewSet(viewsets.ModelViewSet):
     queryset = Date.objects.all()
@@ -117,11 +119,11 @@ class TimesViewSet(viewsets.ModelViewSet):
 class DateVoteViewSet(viewsets.ModelViewSet):
     queryset = DateVote.objects.all()
     serializer_class = DateVoteSerializer
+
     def create(self, request):
         voter_ip = request.data.get('voter_ip')
         poll_id = request.data.get('poll_id')
         poll = Poll.objects.get(pk=poll_id)
-
         date_choices = request.data.get('dateChoices')
 
         for choice in date_choices:

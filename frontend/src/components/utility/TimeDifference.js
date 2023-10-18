@@ -1,8 +1,9 @@
+import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 
 function TimeDifference({ date }) {
   // Set the target date
-  const targetDate = new Date(date);
+  const targetDate = dayjs(date);
 
   // State variable to store the time difference
   const [timeDifference, setTimeDifference] = useState(null);

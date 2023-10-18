@@ -15,17 +15,19 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-const SettingsPoll = ({ handleCreatePoll }) => {
-  const [checked, setChecked] = useState(false);
-  const [voteingSecurity, setVoteingSecurity] = useState(
-    "One vote per IP address"
-  );
+const SettingsPoll = ({
+  handleCreatePoll,
+  checked,
+  setChecked,
+  votingSecurityOption,
+  setVotingSecurityOption,
+}) => {
   const handleChangeVoteingSecurity = (event) => {
-    setVoteingSecurity(event.target.value);
+    setVotingSecurityOption(event.target.value);
   };
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
+  const handleChange = (name) => (event) => {
+    setChecked({ ...checked, [name]: event.target.checked });
   };
 
   return (
@@ -50,7 +52,13 @@ const SettingsPoll = ({ handleCreatePoll }) => {
                   Require participants' names
                 </Typography>
                 <FormControlLabel
-                  control={<Switch checked={checked} onChange={handleChange} />}
+                  control={
+                    <Switch
+                      name="require_names"
+                      checked={checked.require_names}
+                      onChange={handleChange("require_names")}
+                    />
+                  }
                 />
               </Box>
               <Box
@@ -62,7 +70,13 @@ const SettingsPoll = ({ handleCreatePoll }) => {
               >
                 <Typography variant="subtitle2">Allow comments</Typography>
                 <FormControlLabel
-                  control={<Switch checked={checked} onChange={handleChange} />}
+                  control={
+                    <Switch
+                      name="allow_comments"
+                      checked={checked.allow_comments}
+                      onChange={handleChange("allow_comments")}
+                    />
+                  }
                 />
               </Box>
               <Box
@@ -74,7 +88,13 @@ const SettingsPoll = ({ handleCreatePoll }) => {
               >
                 <Typography variant="subtitle2">Hide share button</Typography>
                 <FormControlLabel
-                  control={<Switch checked={checked} onChange={handleChange} />}
+                  control={
+                    <Switch
+                      name="can_share"
+                      checked={checked.can_share}
+                      onChange={handleChange("can_share")}
+                    />
+                  }
                 />
               </Box>
             </Box>
@@ -87,22 +107,22 @@ const SettingsPoll = ({ handleCreatePoll }) => {
                   <Typography variant="subtitle2">Voting security</Typography>
                 </InputLabel>
                 <Select
-                  value={voteingSecurity}
+                  value={votingSecurityOption}
                   size="small"
                   label="Voting security"
                   onChange={handleChangeVoteingSecurity}
                 >
-                  <MenuItem value="multiple votes per person">
+                  <MenuItem value="multiple">
                     <Typography variant="subtitle2">
                       multiple votes per person
                     </Typography>
                   </MenuItem>
-                  <MenuItem value="One vote per IP address">
+                  <MenuItem value="ip">
                     <Typography variant="subtitle2">
                       One vote per IP address
                     </Typography>
                   </MenuItem>
-                  <MenuItem value="One vote per unique code">
+                  <MenuItem value="code">
                     <Typography variant="subtitle2">
                       One vote per unique code
                     </Typography>
@@ -140,7 +160,13 @@ const SettingsPoll = ({ handleCreatePoll }) => {
                   </Box>
                 </Box>
                 <FormControlLabel
-                  control={<Switch checked={checked} onChange={handleChange} />}
+                  control={
+                    <Switch
+                      checked={checked.captcha}
+                      name="captcha"
+                      onChange={handleChange("captcha")}
+                    />
+                  }
                 />
               </Box>
             </Box>

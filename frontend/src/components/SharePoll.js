@@ -16,8 +16,8 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 const SharePoll = () => {
   return (
-    <Box sx={{ py: 4 }}>
-      <Card sx={{ height: 150 }}>
+    <Box sx={{ py: 5 }}>
+      <Card>
         <CardContent>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Box>

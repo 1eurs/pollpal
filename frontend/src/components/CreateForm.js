@@ -7,18 +7,14 @@ import {
   fetchPolls,
   fetchChoices,
   fetchDates,
-  fetchDateVotes,
-  fetchVotes,
 } from "./redux/pollSlice";
 import { useNavigate } from "react-router-dom";
 
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Container,
-  Divider,
   MenuItem,
   TextField,
 } from "@mui/material";
@@ -29,26 +25,35 @@ import CalendarForm from "./Forms/MultiDateCalendar";
 
 const VotingType = [
   {
-    value: "multiple_choice",
+    value: "choices",
     label: "Multiple choice",
   },
   {
-    value: "Meeting Poll",
+    value: "dates",
     label: "Meeting Poll",
   },
 ];
 
 const CreateForm = () => {
+  const [votingSecurityOption, setVotingSecurityOption] = useState("ip");
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const [checked, setChecked] = useState({
+    allow_comments: false,
+    require_names: false,
+    can_share: false,
+    captcha: false,
+  });
 
   const [isMeetingForm, setMeetingForm] = useState(false);
 
   const [title, setTitle] = useState("");
 
   const [optionsFormData, setOptionsFormData] = useState({
-    votingType: "multiple_choice",
+    votingType: "choices",
     options: ["", ""],
   });
 
@@ -61,7 +66,7 @@ const CreateForm = () => {
   const handleVotingTypeChange = (e) => {
     const selectedVotingType = e.target.value;
     setOptionsFormData({ ...optionsFormData, votingType: selectedVotingType });
-    setMeetingForm(selectedVotingType === "Meeting Poll");
+    setMeetingForm(selectedVotingType === "dates");
   };
 
   const handleCreatePoll = async (e) => {
@@ -71,14 +76,24 @@ const CreateForm = () => {
     if (isMeetingForm) {
       pollData = {
         question: title,
-        poll_type: "meeting",
+        poll_type: "dates",
         dates: datesFormData,
+        allow_comments: checked.allow_comments,
+        require_names: checked.require_names,
+        can_share: checked.can_share,
+        captcha: checked.captcha,
+        voting_security_option: votingSecurityOption,
       };
     } else {
       pollData = {
         question: title,
         poll_type: optionsFormData.votingType,
         choices: optionsFormData.options,
+        allow_comments: checked.allow_comments,
+        require_names: checked.require_names,
+        can_share: checked.can_share,
+        captcha: checked.captcha,
+        voting_security_option: votingSecurityOption,
       };
     }
     try {
@@ -168,7 +183,13 @@ const CreateForm = () => {
             )}
           </CardContent>
         </Card>
-        <SettingsPoll handleCreatePoll={handleCreatePoll} />
+        <SettingsPoll
+          handleCreatePoll={handleCreatePoll}
+          checked={checked}
+          setChecked={setChecked}
+          votingSecurityOption={votingSecurityOption}
+          setVotingSecurityOption={setVotingSecurityOption}
+        />
       </Container>
     </Box>
   );

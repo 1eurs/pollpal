@@ -7,7 +7,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { PickersDay } from "@mui/x-date-pickers";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AddIcon from "@mui/icons-material/Add";
-import ClearIcon from "@mui/icons-material/Clear";
+import { useNavigate } from "react-router-dom";
 
 function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
   const handleAddTime = (index) => {
@@ -64,8 +64,8 @@ function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
                   borderRadius={2}
                   sx={{
                     display: "flex",
-                    justifyContent: "center", // Center horizontally
-                    alignItems: "center", // Center vertically
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
                   <Typography variant="h3">

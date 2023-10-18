@@ -17,6 +17,7 @@ import {
   fetchVotes,
 } from "./components/redux/pollSlice";
 import OptionPollResults from "./components/OptionPollResutls";
+import DatePollResults from "./components/DatePollResults";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -63,6 +64,10 @@ const App = () => {
                 votes={votes}
               />
             }
+          />{" "}
+          <Route
+            path="/meetingresults/:poll_id"
+            element={<DatePollResults polls={polls} dates={dates} />}
           />
           <Route element={<ErrorPage />} />
         </Routes>

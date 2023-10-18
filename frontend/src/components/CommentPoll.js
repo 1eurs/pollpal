@@ -2,7 +2,7 @@ import { Box, Card, CardContent, Typography } from "@mui/material";
 
 const CommentPoll = () => {
   return (
-    <Box sx={{ py: 1.5 }}>
+    <Box sx={{ pb: 5 }}>
       <Card>
         <CardContent>
           <Box

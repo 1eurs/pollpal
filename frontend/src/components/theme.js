@@ -16,6 +16,7 @@ export const themeOptions = {
     },
     secondary: {
       main: "#818cf8",
+      light: "#b3bafa",
     },
     background: {
       default: "#111827",
@@ -64,7 +65,7 @@ export const themeOptions = {
     },
   },
   shape: {
-    borderRadius: 4,
+    borderRadius: 2,
   },
 
   spacing: 8,

@@ -1,24 +1,40 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
+from django.db import IntegrityError
 
 class Poll(models.Model):
+
+    SECURITY_CHOICES = [
+        ('multiple', 'Multiple Votes per Person'),
+        ('ip', 'One Vote per IP Address'),
+        ('code', 'One Vote per Unique Code')
+    ]
+
     POLL_TYPE_CHOICES = [
-        ('multiple_choice', 'Multiple Choice Poll'),
-        ('meeting', 'Meeting Poll'),
+        ('choices', 'Multiple Choice Poll'),
+        ('dates', 'Meeting Poll'),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     question = models.CharField(max_length=200)
     poll_type = models.CharField(
-        max_length=200,
+        max_length=300,
         choices=POLL_TYPE_CHOICES,
-        default='multiple_choice' 
+        default='choices' 
     )
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
-
+    allow_comments = models.BooleanField(default=False)
+    require_names = models.BooleanField(default=False)
+    can_share = models.BooleanField(default=True)
+    captcha = models.BooleanField(default=False)
+    voting_security_option = models.CharField(
+        max_length=300,
+        choices=SECURITY_CHOICES,
+        default='ip'
+    )
 
 class Time(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -30,11 +46,14 @@ class Date(models.Model):
     date = models.DateTimeField()
     times = models.ManyToManyField(Time) 
     poll_id = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    vote_count_true = models.IntegerField(default=0)
+    vote_count_false = models.IntegerField(default=0)
 
     def update_vote_count(self):
-        self.vote_count = self.DateVote_set.count()
+        self.vote_count_true = DateVote.objects.filter(date_id=self, can_attend=True).count()
+        self.vote_count_false = DateVote.objects.filter(date_id=self, can_attend=False).count()
         self.save()
-    
+
 class Choice(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     poll_id = models.ForeignKey(Poll, on_delete=models.CASCADE)
@@ -45,20 +64,30 @@ class Choice(models.Model):
         self.vote_count = self.vote_set.count()
         self.save()
 
-
 class Vote(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    voter_ip = models.GenericIPAddressField()
+    voter_ip = models.GenericIPAddressField(protocol='both', unpack_ipv4=True, null=True, blank=True)
     choice_id = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True, blank=True) 
     poll_id = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name='votes')  
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    def is_unique_vote_per_poll_and_voter(self):
+        if self.poll_id.voting_security_option == 'ip':
+            return Vote.objects.filter(poll_id=self.poll_id, voter_ip=self.voter_ip).count() == 0
+        else:
+            return True
+    
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        # After saving the vote, update the vote count for the associated choice
+        if self.is_unique_vote_per_poll_and_voter():
+            if self.choice_id:
+                self.choice_id.update_vote_count()
+            super().save(*args, **kwargs)
+        else:
+            raise IntegrityError("This vote violates the uniqueness constraint.")
+
         if self.choice_id:
             self.choice_id.update_vote_count()
-
 
 class DateVote(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -71,5 +100,5 @@ class DateVote(models.Model):
 
     def save(self, *args, **kwargs):
             super().save(*args, **kwargs)
-            if self.choice_id:
-                self.choice_id.update_vote_count()
+            if self.date_id:
+                self.date_id.update_vote_count()
