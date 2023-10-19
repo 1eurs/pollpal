@@ -4,7 +4,12 @@ import ClearIcon from "@mui/icons-material/Clear";
 
 import { Box, Button, TextField } from "@mui/material";
 
-const OptionsForm = ({ optionsFormData, setOptionsFormData }) => {
+const OptionsForm = ({
+  optionsFormData,
+  setOptionsFormData,
+  name,
+  setName,
+}) => {
   const addOption = () => {
     setOptionsFormData({
       ...optionsFormData,

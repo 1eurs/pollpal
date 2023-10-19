@@ -23,7 +23,6 @@ const DatePollResults = ({ polls, dates }) => {
   const selectedPoll = polls.find((poll) => poll.id === poll_id);
   const selectedDates = dates.filter((item) => item.poll_id === poll_id);
 
-  console.log(selectedDates);
   const handleRefresh = () => {
     dispatch(fetchDates());
   };

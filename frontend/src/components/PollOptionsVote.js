@@ -12,7 +12,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import PageTitle from "./utility/PageTitle";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { voteInPoll, fetchChoices } from "./redux/pollSlice";
@@ -22,17 +21,15 @@ import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
 import TimeDifference from "./utility/TimeDifference";
 
-const PollOptionsVote = ({ notitle, polls, choices, votes }) => {
+const PollOptionsVote = ({ polls, choices, votes, comments }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { poll_id } = useParams();
-
   const selectedPoll = polls.find((poll) => poll.id === poll_id);
   const selectedChoices = choices.filter((item) => item.poll_id === poll_id);
   const selectedVotes = votes.filter((item) => item.poll_id === poll_id);
-
-  console.log(selectedPoll);
+  const [name, setName] = useState();
 
   const [voteData, setVoteData] = useState({
     poll_id: null,
@@ -41,19 +38,21 @@ const PollOptionsVote = ({ notitle, polls, choices, votes }) => {
     created_by: null,
   });
 
-  if (!selectedPoll) {
-    return <div>Loading...</div>;
-  }
-  console.log(voteData);
   const handleVote = () => {
+    if (selectedPoll.require_names && !name) {
+      alert("Name is required in this poll");
+    }
+
     if (!voteData.choice_id) {
       alert("Please select a choice before voting.");
       return;
     }
     if (voteData)
-      dispatch(voteInPoll({ ...voteData, poll_id: poll_id })).then(() => {
-        setVoteData({ ...voteData, choice_id: "" });
-      });
+      dispatch(voteInPoll({ ...voteData, poll_id: poll_id, name: name })).then(
+        () => {
+          setVoteData({ ...voteData, choice_id: "" });
+        }
+      );
   };
 
   const handleResults = () => {
@@ -70,20 +69,17 @@ const PollOptionsVote = ({ notitle, polls, choices, votes }) => {
     navigate(`/results/${poll_id}`);
   };
 
-  const handleShare = () => {
-    console.log("share");
-  };
   return (
     <Container maxWidth="sm">
       <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
         <CardContent>
           <FormControl>
             <Box sx={{ pb: 3 }}>
-              <Typography variant="h2">{selectedPoll.question}</Typography>
+              <Typography variant="h2">{selectedPoll?.question}</Typography>
               <Typography variant="subtitle1">
-                by {selectedPoll.created_by || "a guest"}
+                by {selectedPoll?.created_by || "a guest"}
                 {" · "}
-                <TimeDifference date={selectedPoll.created_at} />
+                <TimeDifference date={selectedPoll?.created_at} />
               </Typography>
             </Box>
             <Box sx={{ pb: 1 }}>
@@ -114,11 +110,13 @@ const PollOptionsVote = ({ notitle, polls, choices, votes }) => {
               ))}
             </RadioGroup>
           </FormControl>
-          {selectedPoll.require_names && (
+          {selectedPoll?.require_names && (
             <Box sx={{ pt: 2 }}>
               <TextField
                 fullWidth
                 size="small"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 label="Name (required)"
                 placeholder="Enter your name"
               ></TextField>
@@ -140,8 +138,8 @@ const PollOptionsVote = ({ notitle, polls, choices, votes }) => {
           </Box>
         </CardContent>
       </Card>
-      <SharePoll can_share={selectedPoll.can_share} />
-      <CommentPoll allow_comments={selectedPoll.require_names} />
+      <SharePoll selectedPoll={selectedPoll} />
+      <CommentPoll selectedPoll={selectedPoll} comments={comments} />
     </Container>
   );
 };

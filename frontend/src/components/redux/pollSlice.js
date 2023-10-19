@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const API = "http://127.0.0.1:8000"; // Define your API base URL
+const API = "http://127.0.0.1:8000";
 
 export const createPollWithDates = createAsyncThunk(
   "polls/create",
@@ -208,6 +208,52 @@ export const fetchDateVotes = createAsyncThunk("datevotes/fetch", async () => {
   }
 });
 
+export const fetchComments = createAsyncThunk("comments/fetch", async () => {
+  try {
+    const response = await fetch(`${API}/api/comments`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to fetch comments");
+    }
+  } catch (error) {
+    throw new Error("Network error");
+  }
+});
+
+export const createComments = createAsyncThunk(
+  "comments/createComments",
+  async (pollData) => {
+    try {
+      const response = await fetch(`${API}/api/comments/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(pollData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.detail || "Failed to create poll with choices"
+        );
+      }
+    } catch (error) {
+      throw new Error("Network error");
+    }
+  }
+);
 const pollSlice = createSlice({
   name: "polls",
   initialState: {
@@ -217,6 +263,7 @@ const pollSlice = createSlice({
     choices: [],
     dates: [],
     dateVotes: [],
+    comments: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -239,6 +286,10 @@ const pollSlice = createSlice({
       })
       .addCase(fetchDateVotes.fulfilled, (state, action) => {
         state.dateVotes = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchComments.fulfilled, (state, action) => {
+        state.comments = action.payload;
         state.error = null;
       });
   },

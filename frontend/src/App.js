@@ -11,6 +11,7 @@ import Footer from "./components/Footer/Footer";
 import PollDatesVote from "./components/PollDatesVote";
 import {
   fetchChoices,
+  fetchComments,
   fetchDateVotes,
   fetchDates,
   fetchPolls,
@@ -28,6 +29,7 @@ const App = () => {
     dispatch(fetchDates());
     dispatch(fetchVotes());
     dispatch(fetchDateVotes());
+    dispatch(fetchComments());
   }, [dispatch]);
 
   const polls = useSelector((state) => state.polls.polls);
@@ -35,6 +37,7 @@ const App = () => {
   const datevotes = useSelector((state) => state.polls.dateVotes);
   const votes = useSelector((state) => state.polls.votes);
   const choices = useSelector((state) => state.polls.choices);
+  const comments = useSelector((state) => state.polls.comments);
 
   return (
     <>
@@ -46,7 +49,12 @@ const App = () => {
           <Route
             path="/optionsVote/:poll_id"
             element={
-              <PollOptionsVote polls={polls} choices={choices} votes={votes} />
+              <PollOptionsVote
+                polls={polls}
+                choices={choices}
+                votes={votes}
+                comments={comments}
+              />
             }
           />
           <Route
