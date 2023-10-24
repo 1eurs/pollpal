@@ -138,12 +138,23 @@ class TimesViewSet(viewsets.ModelViewSet):
     serializer_class = TimeSerializer
 
 
+{
+    "voter_ip": "123.34.53.1",
+    "poll_id": "f40a0eec-dc02-45ad-9bde-638ce27aa4e6",
+    "dateChoices": [
+        {"date_id": "b4f7be36-fc4e-4764-a5dd-2ab90754d761", "can_attend": True},
+        {"date_id": "a012bde0-234f-4748-a5ba-8f27e68c82d1", "can_attend": True},
+        {"date_id": "fe1fb295-c79a-47bb-a803-39fa8782a65c", "can_attend": True},
+    ],
+}
+
+
 class DateVoteViewSet(viewsets.ModelViewSet):
     queryset = DateVote.objects.all()
     serializer_class = DateVoteSerializer
 
     def create(self, request):
-        voter_ip = request.data.get("voter_ip")
+        voter_ip = request.META.get("REMOTE_ADDR")
         poll_id = request.data.get("poll_id")
         poll = Poll.objects.get(pk=poll_id)
         date_choices = request.data.get("dateChoices")

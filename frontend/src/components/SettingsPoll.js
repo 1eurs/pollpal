@@ -122,7 +122,7 @@ const SettingsPoll = ({
                       One vote per IP address
                     </Typography>
                   </MenuItem>
-                  <MenuItem value="code">
+                  <MenuItem value="code" disabled>
                     <Typography variant="subtitle2">
                       One vote per unique code
                     </Typography>

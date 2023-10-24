@@ -143,7 +143,7 @@ const DatePollResults = ({ polls, dates }) => {
         </CardContent>
       </Card>
       <SharePoll />
-      <CommentPoll />
+      {/* <CommentPoll /> */}
     </Container>
   );
 };

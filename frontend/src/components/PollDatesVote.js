@@ -40,7 +40,7 @@ const PollDatesVote = ({ polls, dates, votes }) => {
     }));
   };
 
-  const handleVote = () => {
+  const handleVote = async () => {
     let dateChoices = [];
     for (const date_id in selectedChoices) {
       const obj = {
@@ -49,13 +49,13 @@ const PollDatesVote = ({ polls, dates, votes }) => {
       };
       dateChoices.push(obj);
     }
-    setVoteData({ ...voteData, dateChoices });
-    console.log(voteData);
-  };
 
-  useEffect(() => {
-    dispatch(voteInDatesPoll(voteData));
-  }, [voteData]);
+    let voteDataWithDateChoices = { ...voteData, dateChoices };
+    let res = await dispatch(voteInDatesPoll(voteDataWithDateChoices));
+    if (res.type == "polls/datesvote/rejected") {
+      alert("you voted already");
+    }
+  };
 
   const handleResults = () => {
     dispatch(fetchDateVotes());

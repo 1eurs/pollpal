@@ -38,7 +38,8 @@ const PollOptionsVote = ({ polls, choices, votes, comments }) => {
     created_by: null,
   });
 
-  const handleVote = () => {
+  const handleVote = async () => {
+    let res;
     if (selectedPoll.require_names && !name) {
       alert("Name is required in this poll");
     }
@@ -47,12 +48,16 @@ const PollOptionsVote = ({ polls, choices, votes, comments }) => {
       alert("Please select a choice before voting.");
       return;
     }
-    if (voteData)
-      dispatch(voteInPoll({ ...voteData, poll_id: poll_id, name: name })).then(
-        () => {
-          setVoteData({ ...voteData, choice_id: "" });
-        }
-      );
+
+    res = await dispatch(
+      voteInPoll({ ...voteData, poll_id: poll_id, name: name })
+    );
+
+    if (res.type == "polls/vote/fulfilled") {
+      setVoteData({});
+    } else {
+      alert("you already voted ");
+    }
   };
 
   const handleResults = () => {
