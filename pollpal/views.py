@@ -8,6 +8,7 @@ from .serializers import (
     DateVoteSerializer,
     NameSerializer,
     CommentSerializer,
+    RetrieveCommentSerializer,
 )
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -138,17 +139,6 @@ class TimesViewSet(viewsets.ModelViewSet):
     serializer_class = TimeSerializer
 
 
-{
-    "voter_ip": "123.34.53.1",
-    "poll_id": "f40a0eec-dc02-45ad-9bde-638ce27aa4e6",
-    "dateChoices": [
-        {"date_id": "b4f7be36-fc4e-4764-a5dd-2ab90754d761", "can_attend": True},
-        {"date_id": "a012bde0-234f-4748-a5ba-8f27e68c82d1", "can_attend": True},
-        {"date_id": "fe1fb295-c79a-47bb-a803-39fa8782a65c", "can_attend": True},
-    ],
-}
-
-
 class DateVoteViewSet(viewsets.ModelViewSet):
     queryset = DateVote.objects.all()
     serializer_class = DateVoteSerializer
@@ -175,4 +165,21 @@ class DateVoteViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+    serializer_class = RetrieveCommentSerializer
+
+    def create(self, request):
+        data = request.data
+        comment_id = data.get("commentId", None)
+        if comment_id is not None:
+            parent_comment = Comment.objects.get(id=comment_id)
+            data["poll"] = parent_comment.poll.id
+            data["parent_comment"] = comment_id
+            serializer = CommentSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+        else:
+            serializer = CommentSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

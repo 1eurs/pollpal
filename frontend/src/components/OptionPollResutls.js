@@ -12,7 +12,7 @@ import { fetchChoices, fetchPolls } from "./redux/pollSlice";
 import { useDispatch } from "react-redux";
 import SharePoll from "./SharePoll";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import TimeDifference from "./utility/TimeDifference";
+import TimeDifference from "./utility/RelativeTime";
 
 const OptionPollResults = ({ polls, choices }) => {
   const dispatch = useDispatch();

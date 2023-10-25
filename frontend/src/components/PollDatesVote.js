@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchDateVotes, voteInDatesPoll } from "./redux/pollSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
-import TimeDifference from "./utility/TimeDifference";
+import TimeDifference from "./utility/RelativeTime";
 import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
 

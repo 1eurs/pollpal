@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import TimeDifference from "./utility/TimeDifference";
+import TimeDifference from "./utility/RelativeTime";
 import dayjs from "dayjs";
 import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";

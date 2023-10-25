@@ -39,6 +39,7 @@ const App = () => {
   const choices = useSelector((state) => state.polls.choices);
   const comments = useSelector((state) => state.polls.comments);
 
+  console.log(comments);
   return (
     <>
       <NavBar />

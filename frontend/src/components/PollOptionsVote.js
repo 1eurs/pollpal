@@ -19,7 +19,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
-import TimeDifference from "./utility/TimeDifference";
+import RelativeTime from "./utility/RelativeTime";
 
 const PollOptionsVote = ({ polls, choices, votes, comments }) => {
   const dispatch = useDispatch();
@@ -84,7 +84,7 @@ const PollOptionsVote = ({ polls, choices, votes, comments }) => {
               <Typography variant="subtitle1">
                 by {selectedPoll?.created_by || "a guest"}
                 {" · "}
-                <TimeDifference date={selectedPoll?.created_at} />
+                <RelativeTime timestamp={selectedPoll?.created_at} />
               </Typography>
             </Box>
             <Box sx={{ pb: 1 }}>

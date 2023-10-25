@@ -47,7 +47,21 @@ class NameSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class RetrieveCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = (
+            "id",
+            "name",
+            "comment_text",
+            "created_at",
+            "replies",
+            "poll",
+            "parent_comment",
+        )
+
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = "__all__"
+        fields = ("id", "name", "comment_text", "created_at", "poll", "parent_comment")

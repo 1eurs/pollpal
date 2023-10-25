@@ -21,6 +21,7 @@ router.register(r"times", TimesViewSet)
 router.register(r"datevotes", DateVoteViewSet)
 router.register(r"comments", CommentViewSet)
 
+
 urlpatterns = [
     path("", include(router.urls)),
     path(

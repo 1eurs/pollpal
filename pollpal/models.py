@@ -136,3 +136,7 @@ class Comment(models.Model):
     name = models.CharField(max_length=100)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     comment_text = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    parent_comment = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, blank=True, related_name="replies"
+    )
