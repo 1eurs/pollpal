@@ -21,7 +21,7 @@ import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
 import RelativeTime from "./utility/RelativeTime";
 
-const PollOptionsVote = ({ polls, choices, votes, comments }) => {
+const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -29,6 +29,7 @@ const PollOptionsVote = ({ polls, choices, votes, comments }) => {
   const selectedPoll = polls.find((poll) => poll.id === poll_id);
   const selectedChoices = choices.filter((item) => item.poll_id === poll_id);
   const selectedVotes = votes.filter((item) => item.poll_id === poll_id);
+
   const [name, setName] = useState();
 
   const [voteData, setVoteData] = useState({
@@ -144,7 +145,11 @@ const PollOptionsVote = ({ polls, choices, votes, comments }) => {
         </CardContent>
       </Card>
       <SharePoll selectedPoll={selectedPoll} />
-      <CommentPoll selectedPoll={selectedPoll} comments={comments} />
+      <CommentPoll
+        selectedPoll={selectedPoll}
+        comments={comments}
+        replies={replies}
+      />
     </Container>
   );
 };

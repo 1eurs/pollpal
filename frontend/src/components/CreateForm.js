@@ -34,7 +34,7 @@ const VotingType = [
   },
 ];
 
-const CreateForm = () => {
+const CreateForm = ({ pollID }) => {
   const [votingSecurityOption, setVotingSecurityOption] = useState("ip");
 
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ const CreateForm = () => {
     setMeetingForm(selectedVotingType === "dates");
   };
 
-  const handleCreatePoll = async (e) => {
+  const handleCreatePoll = (e) => {
     e.preventDefault();
     let pollData = {};
 
@@ -97,21 +97,23 @@ const CreateForm = () => {
       };
     }
     try {
-      let response;
-      let poll_id;
       if (isMeetingForm) {
-        console.log(pollData);
-        response = await dispatch(createPollWithDates(pollData));
-        poll_id = response.payload.poll_id;
+        dispatch(createPollWithDates(pollData));
         dispatch(fetchPolls());
         dispatch(fetchDates());
-        navigate(`/datesVote/${poll_id}`);
+        navigate(`/datesVote/${pollID}`);
       } else {
-        response = await dispatch(createPollWithChoices(pollData));
-        poll_id = response.payload.poll_id;
-        dispatch(fetchPolls());
-        dispatch(fetchChoices());
-        navigate(`/optionsVote/${poll_id}`);
+        dispatch(createPollWithChoices(pollData))
+          .then(() => {
+            dispatch(fetchPolls());
+            dispatch(fetchChoices());
+            if (pollID) {
+              navigate(`/optionsVote/${pollID}`);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     } catch (error) {
       console.error("Error:", error);

@@ -172,7 +172,7 @@ const PollDatesVote = ({ polls, dates, votes }) => {
         </CardContent>
       </Card>
       <SharePoll can_share={selectedPoll.can_share} />
-      <CommentPoll allow_comments={selectedPoll.require_names} />
+      {/* <CommentPoll allow_comments={selectedPoll.require_names} /> */}
     </Container>
   );
 };

@@ -15,6 +15,7 @@ import {
   fetchDateVotes,
   fetchDates,
   fetchPolls,
+  fetchReplies,
   fetchVotes,
 } from "./components/redux/pollSlice";
 import OptionPollResults from "./components/OptionPollResutls";
@@ -30,6 +31,7 @@ const App = () => {
     dispatch(fetchVotes());
     dispatch(fetchDateVotes());
     dispatch(fetchComments());
+    dispatch(fetchReplies());
   }, [dispatch]);
 
   const polls = useSelector((state) => state.polls.polls);
@@ -38,15 +40,16 @@ const App = () => {
   const votes = useSelector((state) => state.polls.votes);
   const choices = useSelector((state) => state.polls.choices);
   const comments = useSelector((state) => state.polls.comments);
-
-  console.log(comments);
+  const replies = useSelector((state) => state.polls.replies);
+  const pollID = useSelector((state) => state.polls.pollID);
+  console.log(replies);
   return (
     <>
       <NavBar />
       <Router>
         <Routes>
           <Route path="/" element={<Hero />} />
-          <Route path="/create" element={<CreateForm />} />
+          <Route path="/create" element={<CreateForm pollID={pollID} />} />
           <Route
             path="/optionsVote/:poll_id"
             element={
@@ -55,6 +58,7 @@ const App = () => {
                 choices={choices}
                 votes={votes}
                 comments={comments}
+                replies={replies}
               />
             }
           />

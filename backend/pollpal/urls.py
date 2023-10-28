@@ -8,7 +8,6 @@ from .views import (
     VoteViewSet,
     DatesViewSet,
     TimesViewSet,
-    PollVotesListViewSet,
     CommentViewSet,
 )
 
@@ -21,12 +20,16 @@ router.register(r"times", TimesViewSet)
 router.register(r"datevotes", DateVoteViewSet)
 router.register(r"comments", CommentViewSet)
 
-
 urlpatterns = [
-    path("", include(router.urls)),
     path(
-        "vote/<uuid:poll_id>/",
-        PollVotesListViewSet.as_view({"get": "list"}),
-        name="poll-vote-list",
+        "comments/top-level/",
+        CommentViewSet.as_view({"get": "get_top_level_comments"}),
+        name="comment-top-level",
     ),
+    path(
+        "replies/",
+        CommentViewSet.as_view({"get": "get_comments_with_parents"}),
+        name="comments_with_parents",
+    ),
+    path("", include(router.urls)),
 ]

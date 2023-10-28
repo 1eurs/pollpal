@@ -1,258 +1,85 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const API = "http://127.0.0.1:8000";
+const axiosConfig = {
+  headers: {
+    "Content-Type": "application/json",
+  },
+};
+
+const performApiRequest = async (url, method, data) => {
+  try {
+    const response = await axios.request({
+      url: `${API}/${url}`,
+      method,
+      data,
+      ...axiosConfig,
+    });
+
+    if (response.status === 200) return response.data;
+    throw new Error(response.data.detail || `Failed to ${method} data`);
+  } catch (error) {
+    throw new Error("Network error");
+  }
+};
 
 export const createPollWithDates = createAsyncThunk(
   "polls/create",
-  async (pollData) => {
-    try {
-      const response = await fetch(
-        `${API}/api/polls/create_poll_with_dates_times/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(pollData),
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        return data;
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Failed to create poll");
-      }
-    } catch (error) {
-      throw new Error("Network error");
-    }
-  }
+  async (pollData) =>
+    performApiRequest(
+      "api/polls/create_poll_with_dates_times/",
+      "post",
+      pollData
+    )
 );
 
 export const createPollWithChoices = createAsyncThunk(
   "polls/createWithChoices",
-  async (pollData) => {
-    try {
-      const response = await fetch(`${API}/api/polls/create_with_choices/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(pollData),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        return data;
-      } else {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.detail || "Failed to create poll with choices"
-        );
-      }
-    } catch (error) {
-      throw new Error("Network error");
-    }
-  }
+  async (pollData) =>
+    performApiRequest("api/polls/create_with_choices/", "post", pollData)
 );
 
-export const fetchPolls = createAsyncThunk("polls/fetch", async () => {
-  try {
-    const response = await fetch(`${API}/api/polls`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+export const fetchPolls = createAsyncThunk("polls/fetch", async () =>
+  performApiRequest("api/polls", "get")
+);
 
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "Failed to fetch polls");
-    }
-  } catch (error) {
-    throw new Error("Network error");
-  }
-});
+export const fetchChoices = createAsyncThunk("choices/fetch", async () =>
+  performApiRequest("api/choices", "get")
+);
 
-export const fetchChoices = createAsyncThunk("choices/fetch", async () => {
-  try {
-    const response = await fetch(`${API}/api/choices`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+export const voteInPoll = createAsyncThunk("polls/vote", async (voteData) =>
+  performApiRequest("api/votes/", "post", voteData)
+);
 
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "Failed to fetch choices");
-    }
-  } catch (error) {
-    throw new Error("Network error");
-  }
-});
+export const fetchVotes = createAsyncThunk("votes/fetch", async () =>
+  performApiRequest("api/votes", "get")
+);
 
-export const voteInPoll = createAsyncThunk("polls/vote", async (voteData) => {
-  try {
-    const response = await fetch(`${API}/api/votes/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(voteData),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "Failed to vote in poll");
-    }
-  } catch (error) {
-    throw new Error("Network error");
-  }
-});
-
-export const fetchVotes = createAsyncThunk("votes/fetch", async () => {
-  try {
-    const response = await fetch(`${API}/api/votes`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "Failed to fetch choices");
-    }
-  } catch (error) {
-    throw new Error("Network error");
-  }
-});
-export const fetchDates = createAsyncThunk("dates/fetch", async () => {
-  try {
-    const response = await fetch(`${API}/api/dates`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "Failed to fetch choices");
-    }
-  } catch (error) {
-    throw new Error("Network error");
-  }
-});
+export const fetchDates = createAsyncThunk("dates/fetch", async () =>
+  performApiRequest("api/dates", "get")
+);
 
 export const voteInDatesPoll = createAsyncThunk(
   "polls/datesvote",
-  async (voteData) => {
-    try {
-      const response = await fetch(`${API}/api/datevotes/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(voteData),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        return data;
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Failed to vote in poll");
-      }
-    } catch (error) {
-      throw new Error("Network error");
-    }
-  }
+  async (voteData) => performApiRequest("api/datevotes", "post", voteData)
 );
 
-export const fetchDateVotes = createAsyncThunk("datevotes/fetch", async () => {
-  try {
-    const response = await fetch(`${API}/api/datevotes`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+export const fetchDateVotes = createAsyncThunk("datevotes/fetch", async () =>
+  performApiRequest("api/datevotes", "get")
+);
 
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "Failed to fetch choices");
-    }
-  } catch (error) {
-    throw new Error("Network error");
-  }
-});
+export const fetchComments = createAsyncThunk("comments/fetch", async () =>
+  performApiRequest("api/comments/top-level", "get")
+);
 
-export const fetchComments = createAsyncThunk("comments/fetch", async () => {
-  try {
-    const response = await fetch(`${API}/api/comments`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "Failed to fetch comments");
-    }
-  } catch (error) {
-    throw new Error("Network error");
-  }
-});
+export const fetchReplies = createAsyncThunk("reply/fetch", async () =>
+  performApiRequest(`api/replies`, "get")
+);
 
 export const createComments = createAsyncThunk(
   "comments/createComments",
-  async (pollData) => {
-    try {
-      const response = await fetch(`${API}/api/comments/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(pollData),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        return data;
-      } else {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.detail || "Failed to create poll with choices"
-        );
-      }
-    } catch (error) {
-      throw new Error("Network error");
-    }
-  }
+  async (commentData) => performApiRequest("api/comments/", "post", commentData)
 );
 
 const pollSlice = createSlice({
@@ -265,6 +92,8 @@ const pollSlice = createSlice({
     dates: [],
     dateVotes: [],
     comments: [],
+    pollID: "",
+    replies: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -289,9 +118,15 @@ const pollSlice = createSlice({
         state.dateVotes = action.payload;
         state.error = null;
       })
+      .addCase(fetchReplies.fulfilled, (state, action) => {
+        state.replies = action.payload;
+      })
       .addCase(fetchComments.fulfilled, (state, action) => {
         state.comments = action.payload;
         state.error = null;
+      })
+      .addCase(createPollWithChoices.fulfilled, (state, action) => {
+        state.pollID = action.payload.poll_id;
       });
   },
 });

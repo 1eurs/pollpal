@@ -8,7 +8,6 @@ from .serializers import (
     DateVoteSerializer,
     NameSerializer,
     CommentSerializer,
-    RetrieveCommentSerializer,
 )
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -23,22 +22,15 @@ class PollViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"])
     def create_with_choices(self, request):
-        # poll data
         poll_data = request.data
-        # get choices_data
         choices_data = poll_data.pop("choices", [])
-        # pass data to poll_serializer
         poll_serializer = PollSerializer(data=poll_data)
 
         if poll_serializer.is_valid():
             poll = poll_serializer.save()
-            # loop through the choices array
             for choice_text in choices_data:
-                # make choice data object and pass poll id and text
                 choice_data = {"poll_id": poll.id, "choice_text": choice_text}
-                # pass it to the serializer
                 choice_serializer = ChoiceSerializer(data=choice_data)
-                # validate and save
                 if choice_serializer.is_valid():
                     choice_serializer.save()
                 else:
@@ -51,7 +43,7 @@ class PollViewSet(viewsets.ModelViewSet):
                 "message": "Poll with choices created successfully",
                 "poll_id": poll.id,
             }
-            return Response(response_data, status=status.HTTP_201_CREATED)
+            return Response(response_data, status=200)
         return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=["post"])
@@ -119,16 +111,6 @@ class VoteViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PollVotesListViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = VoteSerializer
-
-    def get_queryset(self):
-        poll_id = self.kwargs.get("poll_id")
-        if poll_id:
-            return Vote.objects.filter(poll_id=poll_id)
-        raise Http404
-
-
 class DatesViewSet(viewsets.ModelViewSet):
     queryset = Date.objects.all()
     serializer_class = DateSerializer
@@ -165,21 +147,14 @@ class DateVoteViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
-    serializer_class = RetrieveCommentSerializer
+    serializer_class = CommentSerializer
 
-    def create(self, request):
-        data = request.data
-        comment_id = data.get("commentId", None)
-        if comment_id is not None:
-            parent_comment = Comment.objects.get(id=comment_id)
-            data["poll"] = parent_comment.poll.id
-            data["parent_comment"] = comment_id
-            serializer = CommentSerializer(data=data)
-            if serializer.is_valid():
-                serializer.save()
-        else:
-            serializer = CommentSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_top_level_comments(self, request, *args, **kwargs):
+        top_level_comments = Comment.objects.filter(parent_comment=None)
+        serializer = self.get_serializer(top_level_comments, many=True)
+        return Response(serializer.data)
+
+    def get_comments_with_parents(self, request, *args, **kwargs):
+        comments_with_parents = Comment.objects.exclude(parent_comment=None)
+        serializer = self.get_serializer(comments_with_parents, many=True)
+        return Response(serializer.data)
