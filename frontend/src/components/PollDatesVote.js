@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import TimeDifference from "./utility/RelativeTime";
 import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
+import DateElement from "./DateElement";
 
 const PollDatesVote = ({ polls, dates, votes }) => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const PollDatesVote = ({ polls, dates, votes }) => {
     }));
   };
 
-  const handleVote = async () => {
+  const handleVote = () => {
     let dateChoices = [];
     for (const date_id in selectedChoices) {
       const obj = {
@@ -51,16 +52,18 @@ const PollDatesVote = ({ polls, dates, votes }) => {
     }
 
     let voteDataWithDateChoices = { ...voteData, dateChoices };
-    let res = await dispatch(voteInDatesPoll(voteDataWithDateChoices));
-    if (res.type == "polls/datesvote/rejected") {
-      alert("you voted already");
-    }
+    dispatch(voteInDatesPoll(voteDataWithDateChoices)).then((action) => {
+      if (action.type === "polls/datesvote/rejected") {
+        alert("You have already voted in this poll.");
+      } else {
+        alert("go to results");
+      }
+    });
   };
 
   const handleResults = () => {
     dispatch(fetchDateVotes());
     navigate(`/meetingresults/${poll_id}`);
-    console.log(selectedChoices);
   };
 
   if (!selectedPoll) {
@@ -79,77 +82,23 @@ const PollDatesVote = ({ polls, dates, votes }) => {
               <TimeDifference date={selectedPoll?.created_at} />
             </Typography>
           </Box>
-
           {selectedDates.map((element) =>
-            element.times.map((timeSlot) => (
-              <Box sx={{ py: 1 }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Box sx={{ display: "flex", gap: 1 }}>
-                    <Box
-                      bgcolor={"secondary.main"}
-                      p={2}
-                      borderRadius={2}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography variant="h3">
-                        {dayjs(element.date).format("MMM D, YY")}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Box
-                        bgcolor={"secondary.light"}
-                        sx={{ p: 2, borderRadius: 2 }}
-                      >
-                        <Typography variant="subtitle2">
-                          from {dayjs(timeSlot.start_time).format("HH:mm")}
-                        </Typography>
-                        <Typography variant="subtitle2">
-                          to {dayjs(timeSlot.end_time).format("HH:mm")}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: "flex", gap: 1 }}>
-                    <Button
-                      variant={
-                        selectedChoices[element.id] === true
-                          ? "contained"
-                          : "outlined"
-                      }
-                      onClick={() => handleSelect(element.id, true)}
-                    >
-                      Agree
-                    </Button>
-                    <Button
-                      variant={
-                        selectedChoices[element.id] === false
-                          ? "contained"
-                          : "outlined"
-                      }
-                      onClick={() => handleSelect(element.id, false)}
-                    >
-                      Not Agree
-                    </Button>
-                  </Box>
-                </Box>
-                <Box sx={{ py: 1 }}></Box>
-              </Box>
-            ))
+            element.times.length === 0 ? (
+              <DateElement
+                element={element}
+                selectedChoices={selectedChoices}
+                handleSelect={handleSelect}
+              />
+            ) : (
+              element.times.map((timeSlot) => (
+                <DateElement
+                  timeSlot={timeSlot}
+                  element={element}
+                  selectedChoices={selectedChoices}
+                  handleSelect={handleSelect}
+                />
+              ))
+            )
           )}
           {selectedPoll.require_names && (
             <Box sx={{ pb: 3 }}>

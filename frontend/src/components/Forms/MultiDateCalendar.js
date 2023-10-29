@@ -29,7 +29,7 @@ function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
     } else {
       const newDateObject = {
         date: date,
-        times: [{}],
+        times: [],
       };
       setDatesWithTimeSlots((prevDates) => [...prevDates, newDateObject]);
     }
@@ -79,43 +79,49 @@ function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
                     gap: 1,
                   }}
                 >
-                  {item.times.map((timeSlot, timeSlotIndex) => (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: 1,
-                        alignItems: "center",
-                      }}
-                    >
-                      <TimePicker
-                        ampm={false}
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            style: { fontSize: "6px" },
-                          },
+                  {item.times.length > 0 ? (
+                    item.times.map((timeSlot, timeSlotIndex) => (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          alignItems: "center",
                         }}
-                        value={item.date}
-                        onChange={(newValue) => {
-                          const newTimeSlots = [...datesWithTimeSlots];
-                          newTimeSlots[index].times[timeSlotIndex].start_time =
-                            newValue;
-                          setDatesWithTimeSlots(newTimeSlots);
-                        }}
-                      />
-                      <TimePicker
-                        ampm={false}
-                        slotProps={{ textField: { size: "small" } }}
-                        value={item.date}
-                        onChange={(newValue) => {
-                          const newTimeSlots = [...datesWithTimeSlots];
-                          newTimeSlots[index].times[timeSlotIndex].end_time =
-                            newValue;
-                          setDatesWithTimeSlots(newTimeSlots);
-                        }}
-                      />
-                    </Box>
-                  ))}
+                        key={timeSlotIndex}
+                      >
+                        <TimePicker
+                          ampm={false}
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              style: { fontSize: "6px" },
+                            },
+                          }}
+                          value={item.date}
+                          onChange={(newValue) => {
+                            const newTimeSlots = [...datesWithTimeSlots];
+                            newTimeSlots[index].times[
+                              timeSlotIndex
+                            ].start_time = newValue;
+                            setDatesWithTimeSlots(newTimeSlots);
+                          }}
+                        />
+                        <TimePicker
+                          ampm={false}
+                          slotProps={{ textField: { size: "small" } }}
+                          value={item.date}
+                          onChange={(newValue) => {
+                            const newTimeSlots = [...datesWithTimeSlots];
+                            newTimeSlots[index].times[timeSlotIndex].end_time =
+                              newValue;
+                            setDatesWithTimeSlots(newTimeSlots);
+                          }}
+                        />
+                      </Box>
+                    ))
+                  ) : (
+                    <Typography>ALL TIME</Typography>
+                  )}
                   <Box>
                     <Button
                       startIcon={<AddIcon />}

@@ -103,9 +103,12 @@ const DatePollResults = ({ polls, dates }) => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="h3">
-                        {element.vote_count_true}
-                      </Typography>
+                      <Box textAlign={"center"}>
+                        <Typography variant="h3">AGREE</Typography>
+                        <Typography variant="h3">
+                          {element.vote_count_true}
+                        </Typography>
+                      </Box>
                     </Box>
                     <Box
                       bgcolor={"secondary.main"}
@@ -117,9 +120,12 @@ const DatePollResults = ({ polls, dates }) => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="h3">
-                        {element.vote_count_false}
-                      </Typography>
+                      <Box textAlign={"center"}>
+                        <Typography variant="h3">NOT AGREE</Typography>
+                        <Typography variant="h3">
+                          {element.vote_count_false}
+                        </Typography>
+                      </Box>
                     </Box>
                   </Box>
                 </Box>
@@ -149,10 +155,3 @@ const DatePollResults = ({ polls, dates }) => {
 };
 
 export default DatePollResults;
-
-// {selectedDates.map((date) => (
-//     <Box sx={{ display: "flex", gap: 2 }}>
-//       <Typography> {date.vote_count_false}</Typography>
-//       <Typography> {date.vote_count_true}</Typography>
-//     </Box>
-//   ))}

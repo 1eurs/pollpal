@@ -62,7 +62,7 @@ export const fetchDates = createAsyncThunk("dates/fetch", async () =>
 
 export const voteInDatesPoll = createAsyncThunk(
   "polls/datesvote",
-  async (voteData) => performApiRequest("api/datevotes", "post", voteData)
+  async (voteData) => performApiRequest("api/datevotes/", "post", voteData)
 );
 
 export const fetchDateVotes = createAsyncThunk("datevotes/fetch", async () =>
@@ -124,9 +124,6 @@ const pollSlice = createSlice({
       .addCase(fetchComments.fulfilled, (state, action) => {
         state.comments = action.payload;
         state.error = null;
-      })
-      .addCase(createPollWithChoices.fulfilled, (state, action) => {
-        state.pollID = action.payload.poll_id;
       });
   },
 });

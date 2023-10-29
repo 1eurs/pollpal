@@ -39,8 +39,7 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
     created_by: null,
   });
 
-  const handleVote = async () => {
-    let res;
+  const handleVote = () => {
     if (selectedPoll.require_names && !name) {
       alert("Name is required in this poll");
     }
@@ -50,15 +49,16 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
       return;
     }
 
-    res = await dispatch(
-      voteInPoll({ ...voteData, poll_id: poll_id, name: name })
+    dispatch(voteInPoll({ ...voteData, poll_id: poll_id, name: name })).then(
+      (action) => {
+        if (action.type === "polls/vote/fulfilled") {
+          setVoteData({});
+          alert("go to results");
+        } else {
+          alert("you already voted ");
+        }
+      }
     );
-
-    if (res.type == "polls/vote/fulfilled") {
-      setVoteData({});
-    } else {
-      alert("you already voted ");
-    }
   };
 
   const handleResults = () => {

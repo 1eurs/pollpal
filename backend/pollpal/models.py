@@ -35,8 +35,8 @@ class Poll(models.Model):
 
 class Time(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
 
 
 class Date(models.Model):

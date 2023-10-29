@@ -42,7 +42,6 @@ const App = () => {
   const comments = useSelector((state) => state.polls.comments);
   const replies = useSelector((state) => state.polls.replies);
   const pollID = useSelector((state) => state.polls.pollID);
-  console.log(replies);
   return (
     <>
       <NavBar />

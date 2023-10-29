@@ -34,7 +34,7 @@ const VotingType = [
   },
 ];
 
-const CreateForm = ({ pollID }) => {
+const CreateForm = () => {
   const [votingSecurityOption, setVotingSecurityOption] = useState("ip");
 
   const navigate = useNavigate();
@@ -98,13 +98,23 @@ const CreateForm = ({ pollID }) => {
     }
     try {
       if (isMeetingForm) {
-        dispatch(createPollWithDates(pollData));
-        dispatch(fetchPolls());
-        dispatch(fetchDates());
-        navigate(`/datesVote/${pollID}`);
+        console.log(pollData);
+        dispatch(createPollWithDates(pollData))
+          .then((action) => {
+            let pollID = action.payload.poll_id;
+            dispatch(fetchDates());
+            dispatch(fetchPolls());
+            if (pollID) {
+              navigate(`/datesVote/${pollID}`);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
         dispatch(createPollWithChoices(pollData))
-          .then(() => {
+          .then((action) => {
+            let pollID = action.payload.poll_id;
             dispatch(fetchPolls());
             dispatch(fetchChoices());
             if (pollID) {

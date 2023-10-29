@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
 from django.http import Http404
+from pprint import pprint
 
 
 class PollViewSet(viewsets.ModelViewSet):
@@ -52,33 +53,35 @@ class PollViewSet(viewsets.ModelViewSet):
         dates_data = poll_data.pop("dates", [])
 
         poll_serializer = PollSerializer(data=poll_data)
+
         if poll_serializer.is_valid():
             poll = poll_serializer.save()
             for date_data in dates_data:
                 date_data["poll_id"] = poll.id
                 times_data = date_data.get("times", [])
-                # pass to serializer and save
-                for time_data in times_data:
-                    if not time_data:
-                        start_time = "2023-10-21T00:00:00.000Z"
-                        end_time = "2023-10-21T00:00:00.000Z"
-                    else:
-                        start_time = time_data["start_time"]
-                        end_time = time_data["end_time"]
 
-                    time_instance = Time.objects.create(
-                        start_time=start_time, end_time=end_time
-                    )
+                if times_data == []:
                     date_serializer = DateSerializer(data=date_data)
                     if date_serializer.is_valid():
                         date = date_serializer.save()
-                        date.times.add(time_instance)
+                else:
+                    for time_data in times_data:
+                        start_time = time_data["start_time"]
+                        end_time = time_data["end_time"]
+
+                        time_instance = Time.objects.create(
+                            start_time=start_time, end_time=end_time
+                        )
+                        date_serializer = DateSerializer(data=date_data)
+                        if date_serializer.is_valid():
+                            date = date_serializer.save()
+                            date.times.add(time_instance)
+
             response_data = {
                 "message": "Poll with choices created successfully",
                 "poll_id": poll.id,
             }
-
-            return Response(response_data, status=status.HTTP_201_CREATED)
+            return Response(response_data, status=200)
         else:
             return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -106,7 +109,7 @@ class VoteViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=200)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -142,7 +145,7 @@ class DateVoteViewSet(viewsets.ModelViewSet):
             date_vote.save()
 
         serializer = DateVoteSerializer(date_vote)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=200)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
