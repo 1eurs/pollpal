@@ -99,6 +99,9 @@ class VoteViewSet(viewsets.ModelViewSet):
         voter_ip = request.META.get("REMOTE_ADDR")
         request.data["voter_ip"] = voter_ip
 
+        if "choice_id" not in request.data:
+            return Response(status=400)
+
         name_data = NameSerializer(
             data={"name": request.data.get("name"), "name": request.data.get("name")}
         )

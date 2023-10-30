@@ -22,7 +22,10 @@ import { useNavigate } from "react-router-dom";
 import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
 import RelativeTime from "./utility/RelativeTime";
-
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
+import MyAlert from "./utility/MyAlert";
+import MyBackdrop from "./utility/MyBackdrop";
 const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -132,25 +135,27 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
 
           {/* Alerts  */}
           {isAlert1 && (
-            <Box sx={{ pt: 1 }}>
-              <Alert severity="error">
-                You (or someone on your Wi-Fi/network) have already participated
-                in this poll.
-              </Alert>
-            </Box>
+            <MyAlert
+              severity="error"
+              message="You (or someone on your Wi-Fi/network) have already participated in this poll."
+            />
           )}
           {isAlert2 && (
-            <Box sx={{ pt: 1 }}>
-              <Alert severity="error">
-                Please choose at least 1 option(s).
-              </Alert>
-            </Box>
+            <MyAlert
+              severity="error"
+              message="Please choose at least 1 option(s)"
+            />
           )}
-          {isAlert3 && (
-            <Box sx={{ pt: 1 }}>
-              <Alert severity="error">Name is required</Alert>
-            </Box>
-          )}
+          {isAlert3 && <MyAlert severity="error" message="Name is required" />}
+
+          {/* Backdrop */}
+          <MyBackdrop
+            open={open}
+            handleClose={handleClose}
+            poll_id={poll_id}
+            navigate={navigate}
+          />
+
           {selectedPoll?.require_names && (
             <Box sx={{ pt: 2 }}>
               <TextField
@@ -168,42 +173,6 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
               pt: 3,
             }}
           >
-            {/* Backdrop */}
-            <Backdrop
-              sx={{
-                color: "#fff",
-                zIndex: (theme) => theme.zIndex.drawer + 1,
-              }}
-              open={open}
-            >
-              <Card sx={{ maxWidth: 400 }}>
-                <CardContent>
-                  <Typography variant="h6">Vote Successful</Typography>
-                  <Box display="flex" justifyContent="flex-end">
-                    <Button
-                      onClick={handleClose}
-                      color="primary"
-                      variant="outlined"
-                    >
-                      X
-                    </Button>
-                  </Box>
-                  <Typography>
-                    Thank you for participating in this poll. Your vote has been
-                    counted.
-                  </Typography>
-                  <Box display="flex" justifyContent="center" mt={2}>
-                    <Button variant="contained" color="primary">
-                      Results
-                    </Button>
-                    <Button variant="contained" color="primary" sx={{ ml: 2 }}>
-                      Share
-                    </Button>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Backdrop>
-
             {/* Buttons */}
             <Box sx={{ display: "flex", gap: 1 }}>
               <Button fullWidth variant="contained" onClick={handleVote}>

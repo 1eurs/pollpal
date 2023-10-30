@@ -15,15 +15,27 @@ import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
 import DateElement from "./DateElement";
 import RelativeTime from "./utility/RelativeTime";
+import MyAlert from "./utility/MyAlert";
+import MyBackdrop from "./utility/MyBackdrop";
 
 const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isAlert1, setAlert1] = useState(false);
+  const [isAlert2, setAlert2] = useState(false);
 
   const { poll_id } = useParams();
   const selectedPoll = polls.find((poll) => poll.id === poll_id);
   const selectedDates = dates.filter((item) => item.poll_id === poll_id);
-  const selectedVotes = votes.filter((item) => item.poll_id === poll_id);
+  // const selectedVotes = votes.filter((item) => item.poll_id === poll_id);
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   const [voteData, setVoteData] = useState({
     voter_ip: "123.34.53.1",
@@ -41,6 +53,7 @@ const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
 
   const handleVote = () => {
     let dateChoices = [];
+
     for (const date_id in selectedChoices) {
       const obj = {
         date_id: date_id,
@@ -50,11 +63,14 @@ const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
     }
 
     let voteDataWithDateChoices = { ...voteData, dateChoices };
+    if (!voteData.dateChoices) {
+      setAlert2(true);
+    }
     dispatch(voteInDatesPoll(voteDataWithDateChoices)).then((action) => {
       if (action.type === "polls/datesvote/rejected") {
-        alert("You have already voted in this poll.");
+        setAlert1(true);
       } else {
-        alert("go to results");
+        handleOpen();
       }
     });
   };
@@ -100,6 +116,28 @@ const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
               ))
             )
           )}
+
+          {isAlert1 && (
+            <MyAlert
+              severity="error"
+              message="You (or someone on your Wi-Fi/network) have already participated in this poll."
+            />
+          )}
+          {isAlert2 && (
+            <MyAlert
+              severity="error"
+              message="Please choose at least 1 option(s)."
+            />
+          )}
+
+          <MyBackdrop
+            open={open}
+            handleClose={handleClose}
+            poll_id={poll_id}
+            navigate={navigate}
+            dates={true}
+          />
+
           {selectedPoll.require_names && (
             <Box sx={{ pb: 3 }}>
               <TextField
@@ -110,7 +148,8 @@ const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
               ></TextField>
             </Box>
           )}
-          <Box sx={{ display: "flex", gap: "0.5rem" }}>
+
+          <Box sx={{ display: "flex", gap: "0.5rem", pt: 1 }}>
             <Button variant="contained" fullWidth onClick={handleVote}>
               Vote
             </Button>
