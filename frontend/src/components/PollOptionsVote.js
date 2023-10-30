@@ -1,4 +1,6 @@
 import {
+  Alert,
+  Backdrop,
   Box,
   Button,
   Card,
@@ -31,6 +33,18 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
   const selectedVotes = votes.filter((item) => item.poll_id === poll_id);
 
   const [name, setName] = useState();
+  const [open, setOpen] = useState(false);
+  const [isAlert1, setAlert1] = useState(false);
+  const [isAlert2, setAlert2] = useState(false);
+  const [isAlert3, setAlert3] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   const [voteData, setVoteData] = useState({
     poll_id: null,
@@ -41,21 +55,20 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
 
   const handleVote = () => {
     if (selectedPoll.require_names && !name) {
-      alert("Name is required in this poll");
+      setAlert3(true);
     }
 
     if (!voteData.choice_id) {
-      alert("Please select a choice before voting.");
-      return;
+      setAlert2(true);
     }
 
     dispatch(voteInPoll({ ...voteData, poll_id: poll_id, name: name })).then(
       (action) => {
         if (action.type === "polls/vote/fulfilled") {
           setVoteData({});
-          alert("go to results");
+          handleOpen();
         } else {
-          alert("you already voted ");
+          setAlert1(true);
         }
       }
     );
@@ -116,6 +129,28 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
               ))}
             </RadioGroup>
           </FormControl>
+
+          {/* Alerts  */}
+          {isAlert1 && (
+            <Box sx={{ pt: 1 }}>
+              <Alert severity="error">
+                You (or someone on your Wi-Fi/network) have already participated
+                in this poll.
+              </Alert>
+            </Box>
+          )}
+          {isAlert2 && (
+            <Box sx={{ pt: 1 }}>
+              <Alert severity="error">
+                Please choose at least 1 option(s).
+              </Alert>
+            </Box>
+          )}
+          {isAlert3 && (
+            <Box sx={{ pt: 1 }}>
+              <Alert severity="error">Name is required</Alert>
+            </Box>
+          )}
           {selectedPoll?.require_names && (
             <Box sx={{ pt: 2 }}>
               <TextField
@@ -133,6 +168,43 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
               pt: 3,
             }}
           >
+            {/* Backdrop */}
+            <Backdrop
+              sx={{
+                color: "#fff",
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+              }}
+              open={open}
+            >
+              <Card sx={{ maxWidth: 400 }}>
+                <CardContent>
+                  <Typography variant="h6">Vote Successful</Typography>
+                  <Box display="flex" justifyContent="flex-end">
+                    <Button
+                      onClick={handleClose}
+                      color="primary"
+                      variant="outlined"
+                    >
+                      X
+                    </Button>
+                  </Box>
+                  <Typography>
+                    Thank you for participating in this poll. Your vote has been
+                    counted.
+                  </Typography>
+                  <Box display="flex" justifyContent="center" mt={2}>
+                    <Button variant="contained" color="primary">
+                      Results
+                    </Button>
+                    <Button variant="contained" color="primary" sx={{ ml: 2 }}>
+                      Share
+                    </Button>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Backdrop>
+
+            {/* Buttons */}
             <Box sx={{ display: "flex", gap: 1 }}>
               <Button fullWidth variant="contained" onClick={handleVote}>
                 Vote

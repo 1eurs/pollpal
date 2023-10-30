@@ -34,14 +34,9 @@ const App = () => {
     dispatch(fetchReplies());
   }, [dispatch]);
 
-  const polls = useSelector((state) => state.polls.polls);
-  const dates = useSelector((state) => state.polls.dates);
-  const datevotes = useSelector((state) => state.polls.dateVotes);
-  const votes = useSelector((state) => state.polls.votes);
-  const choices = useSelector((state) => state.polls.choices);
-  const comments = useSelector((state) => state.polls.comments);
-  const replies = useSelector((state) => state.polls.replies);
-  const pollID = useSelector((state) => state.polls.pollID);
+  const { polls, dates, datevotes, votes, choices, comments, replies, pollID } =
+    useSelector((state) => state.polls);
+
   return (
     <>
       <NavBar />
@@ -64,7 +59,13 @@ const App = () => {
           <Route
             path="/datesVote/:poll_id"
             element={
-              <PollDatesVote polls={polls} dates={dates} votes={datevotes} />
+              <PollDatesVote
+                polls={polls}
+                dates={dates}
+                votes={datevotes}
+                comments={comments}
+                replies={replies}
+              />
             }
           />
           <Route
@@ -76,7 +77,7 @@ const App = () => {
                 votes={votes}
               />
             }
-          />{" "}
+          />
           <Route
             path="/meetingresults/:poll_id"
             element={<DatePollResults polls={polls} dates={dates} />}

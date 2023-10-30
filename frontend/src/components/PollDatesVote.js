@@ -5,20 +5,18 @@ import {
   CardContent,
   Container,
   Typography,
-  Divider,
   TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { fetchDateVotes, voteInDatesPoll } from "./redux/pollSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import dayjs from "dayjs";
-import TimeDifference from "./utility/RelativeTime";
 import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
 import DateElement from "./DateElement";
+import RelativeTime from "./utility/RelativeTime";
 
-const PollDatesVote = ({ polls, dates, votes }) => {
+const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -79,7 +77,7 @@ const PollDatesVote = ({ polls, dates, votes }) => {
             <Typography variant="subtitle1">
               by {selectedPoll?.created_by || "a guest"}
               {" · "}
-              <TimeDifference date={selectedPoll?.created_at} />
+              <RelativeTime timestamp={selectedPoll?.created_at} />
             </Typography>
           </Box>
           {selectedDates.map((element) =>
@@ -88,6 +86,7 @@ const PollDatesVote = ({ polls, dates, votes }) => {
                 element={element}
                 selectedChoices={selectedChoices}
                 handleSelect={handleSelect}
+                isVote={true}
               />
             ) : (
               element.times.map((timeSlot) => (
@@ -96,6 +95,7 @@ const PollDatesVote = ({ polls, dates, votes }) => {
                   element={element}
                   selectedChoices={selectedChoices}
                   handleSelect={handleSelect}
+                  isVote={true}
                 />
               ))
             )
@@ -121,7 +121,11 @@ const PollDatesVote = ({ polls, dates, votes }) => {
         </CardContent>
       </Card>
       <SharePoll can_share={selectedPoll.can_share} />
-      {/* <CommentPoll allow_comments={selectedPoll.require_names} /> */}
+      <CommentPoll
+        selectedPoll={selectedPoll}
+        comments={comments}
+        replies={replies}
+      />
     </Container>
   );
 };

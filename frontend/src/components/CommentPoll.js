@@ -54,29 +54,29 @@ const CommentPoll = ({ selectedPoll, comments, replies }) => {
   return (
     <>
       {/* comments card  */}
-
-      <Box sx={{ pb: 5 }}>
-        <Card>
-          <CardContent>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              }}
-            >
-              <Comment
-                comments={selectedComments}
-                poll={selectedPoll}
-                replies={selectedReplies}
-              />
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
-
+      {selectedComments.length > 0 && (
+        <Box sx={{ pb: 5 }}>
+          <Card>
+            <CardContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                }}
+              >
+                <Typography>Comments</Typography>
+                <Comment
+                  comments={selectedComments}
+                  poll={selectedPoll}
+                  replies={selectedReplies}
+                />
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      )}
       {/* comment form */}
-
       <Box sx={{ pb: 5 }}>
         <Card>
           <CardContent>
@@ -87,6 +87,8 @@ const CommentPoll = ({ selectedPoll, comments, replies }) => {
                 gap: 2,
               }}
             >
+              {" "}
+              <Typography>Add comment</Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 <Box>
                   <TextField

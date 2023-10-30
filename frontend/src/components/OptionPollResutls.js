@@ -12,7 +12,7 @@ import { fetchChoices, fetchPolls } from "./redux/pollSlice";
 import { useDispatch } from "react-redux";
 import SharePoll from "./SharePoll";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import TimeDifference from "./utility/RelativeTime";
+import RelativeTime from "./utility/RelativeTime";
 
 const OptionPollResults = ({ polls, choices }) => {
   const dispatch = useDispatch();
@@ -68,7 +68,7 @@ const OptionPollResults = ({ polls, choices }) => {
             <Typography variant="subtitle1">
               by {selectedPoll?.created_by || "a guest"}
               {" · "}
-              <TimeDifference date={selectedPoll?.created_at} />
+              <RelativeTime timestamp={selectedPoll?.created_at} />
             </Typography>
           </Box>
 

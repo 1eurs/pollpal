@@ -8,12 +8,13 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import TimeDifference from "./utility/RelativeTime";
 import dayjs from "dayjs";
 import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
 import { fetchDates } from "./redux/pollSlice";
 import { useEffect } from "react";
+import DateElement from "./DateElement";
+import RelativeTime from "./utility/RelativeTime";
 
 const DatePollResults = ({ polls, dates }) => {
   const dispatch = useDispatch();
@@ -44,94 +45,21 @@ const DatePollResults = ({ polls, dates }) => {
             <Typography variant="subtitle1">
               by {selectedPoll?.created_by || "a guest"}
               {" · "}
-              <TimeDifference date={selectedPoll?.created_at} />
+              <RelativeTime timestamp={selectedPoll?.created_at} />
             </Typography>
           </Box>
-
           {selectedDates.map((element) =>
-            element.times.map((timeSlot) => (
-              <Box sx={{ py: 1 }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Box sx={{ display: "flex", gap: 1 }}>
-                    <Box
-                      bgcolor={"secondary.main"}
-                      p={2}
-                      borderRadius={2}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography variant="h3">
-                        {dayjs(element.date).format("MMM D, YY")}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Box
-                        bgcolor={"secondary.light"}
-                        sx={{ p: 2, borderRadius: 2 }}
-                      >
-                        <Typography variant="subtitle2">
-                          from {dayjs(timeSlot.start_time).format("HH:mm")}
-                        </Typography>
-                        <Typography variant="subtitle2">
-                          to {dayjs(timeSlot.end_time).format("HH:mm")}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: "flex", gap: 1 }}>
-                    <Box
-                      bgcolor={"secondary.main"}
-                      p={2}
-                      borderRadius={2}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Box textAlign={"center"}>
-                        <Typography variant="h3">AGREE</Typography>
-                        <Typography variant="h3">
-                          {element.vote_count_true}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Box
-                      bgcolor={"secondary.main"}
-                      p={2}
-                      borderRadius={2}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Box textAlign={"center"}>
-                        <Typography variant="h3">NOT AGREE</Typography>
-                        <Typography variant="h3">
-                          {element.vote_count_false}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-                </Box>
-                <Box sx={{ py: 1 }}></Box>
-              </Box>
-            ))
+            element.times.length === 0 ? (
+              <DateElement element={element} isResult={true} />
+            ) : (
+              element.times.map((timeSlot) => (
+                <DateElement
+                  timeSlot={timeSlot}
+                  element={element}
+                  isResult={true}
+                />
+              ))
+            )
           )}
           <Box sx={{ pt: 4, display: "flex", gap: 1 }}>
             <Button variant="contained" fullWidth onClick={handleRefresh}>
@@ -149,7 +77,6 @@ const DatePollResults = ({ polls, dates }) => {
         </CardContent>
       </Card>
       <SharePoll />
-      {/* <CommentPoll /> */}
     </Container>
   );
 };
