@@ -115,10 +115,11 @@ class DateVote(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
-        if DateVote.objects.filter(
-            voter_ip=self.voter_ip, poll_id=self.poll_id, date_id=self.date_id
-        ).exists():
-            raise IntegrityError("You have already voted in this poll.")
+        if self.poll_id.voting_security_option == "ip":
+            if DateVote.objects.filter(
+                voter_ip=self.voter_ip, poll_id=self.poll_id, date_id=self.date_id
+            ).exists():
+                raise IntegrityError("You have already voted in this poll.")
         super().save(*args, **kwargs)
         if self.date_id:
             self.date_id.update_vote_count()

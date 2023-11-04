@@ -7,13 +7,20 @@ import { Box, Button, Typography } from "@mui/material";
 import { PickersDay } from "@mui/x-date-pickers";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AddIcon from "@mui/icons-material/Add";
-import { useNavigate } from "react-router-dom";
 
 function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
   const handleAddTime = (index) => {
     const newDatesWithTimeSlots = [...datesWithTimeSlots];
     newDatesWithTimeSlots[index].times.push({});
     setDatesWithTimeSlots(newDatesWithTimeSlots);
+  };
+
+  const handleDeleteTimeSlot = (index, timeSlotIndex) => {
+    setDatesWithTimeSlots((prevDates) => {
+      const newDatesWithTimeSlots = [...prevDates];
+      newDatesWithTimeSlots[index].times.splice(timeSlotIndex, 1);
+      return newDatesWithTimeSlots;
+    });
   };
 
   const handleDateSelect = (date) => {
@@ -117,6 +124,13 @@ function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
                             setDatesWithTimeSlots(newTimeSlots);
                           }}
                         />
+                        <Button
+                          onClick={() =>
+                            handleDeleteTimeSlot(index, timeSlotIndex)
+                          }
+                        >
+                          Delete
+                        </Button>
                       </Box>
                     ))
                   ) : (

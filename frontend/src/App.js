@@ -8,7 +8,7 @@ import ErrorPage from "./components/utility/ErrorPage";
 import CreateForm from "./components/CreateForm";
 import PollOptionsVote from "./components/PollOptionsVote";
 import Footer from "./components/Footer/Footer";
-import PollDatesVote from "./components/PollDatesVote";
+import MeetingPollVote from "./components/MeetingPollVote";
 import {
   fetchChoices,
   fetchComments,
@@ -19,7 +19,7 @@ import {
   fetchVotes,
 } from "./components/redux/pollSlice";
 import OptionPollResults from "./components/OptionPollResutls";
-import DatePollResults from "./components/DatePollResults";
+import MeetingPolllResults from "./components/MeetingPolllResults";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -59,7 +59,7 @@ const App = () => {
           <Route
             path="/datesVote/:poll_id"
             element={
-              <PollDatesVote
+              <MeetingPollVote
                 polls={polls}
                 dates={dates}
                 votes={datevotes}
@@ -80,7 +80,7 @@ const App = () => {
           />
           <Route
             path="/meetingresults/:poll_id"
-            element={<DatePollResults polls={polls} dates={dates} />}
+            element={<MeetingPolllResults polls={polls} dates={dates} />}
           />
           <Route element={<ErrorPage />} />
         </Routes>

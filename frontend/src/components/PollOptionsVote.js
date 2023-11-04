@@ -1,6 +1,4 @@
 import {
-  Alert,
-  Backdrop,
   Box,
   Button,
   Card,
@@ -8,7 +6,6 @@ import {
   Container,
   FormControl,
   FormControlLabel,
-  FormLabel,
   Radio,
   RadioGroup,
   TextField,
@@ -22,8 +19,6 @@ import { useNavigate } from "react-router-dom";
 import SharePoll from "./SharePoll";
 import CommentPoll from "./CommentPoll";
 import RelativeTime from "./utility/RelativeTime";
-import DoneIcon from "@mui/icons-material/Done";
-import CloseIcon from "@mui/icons-material/Close";
 import MyAlert from "./utility/MyAlert";
 import MyBackdrop from "./utility/MyBackdrop";
 const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
@@ -46,6 +41,7 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
   };
 
   const handleOpen = () => {
+    dispatch(fetchChoices());
     setOpen(true);
   };
 
@@ -70,6 +66,10 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
         if (action.type === "polls/vote/fulfilled") {
           setVoteData({});
           handleOpen();
+          console.log(action);
+          setAlert1(false);
+          setAlert2(false);
+          setAlert3(false);
         } else {
           setAlert1(true);
         }

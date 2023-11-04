@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import DateElement from "./DateElement";
 import RelativeTime from "./utility/RelativeTime";
 
-const DatePollResults = ({ polls, dates }) => {
+const MeetingPolllResults = ({ polls, dates }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { poll_id } = useParams();
@@ -81,4 +81,4 @@ const DatePollResults = ({ polls, dates }) => {
   );
 };
 
-export default DatePollResults;
+export default MeetingPolllResults;

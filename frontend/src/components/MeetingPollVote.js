@@ -18,7 +18,7 @@ import RelativeTime from "./utility/RelativeTime";
 import MyAlert from "./utility/MyAlert";
 import MyBackdrop from "./utility/MyBackdrop";
 
-const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
+const MeetingPollVote = ({ polls, dates, comments, replies }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isAlert1, setAlert1] = useState(false);
@@ -27,7 +27,6 @@ const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
   const { poll_id } = useParams();
   const selectedPoll = polls.find((poll) => poll.id === poll_id);
   const selectedDates = dates.filter((item) => item.poll_id === poll_id);
-  // const selectedVotes = votes.filter((item) => item.poll_id === poll_id);
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -38,7 +37,7 @@ const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
   };
 
   const [voteData, setVoteData] = useState({
-    voter_ip: "123.34.53.1",
+    voter_ip: "00.00.00.0",
     poll_id: poll_id,
   });
 
@@ -71,6 +70,8 @@ const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
         setAlert1(true);
       } else {
         handleOpen();
+        setAlert1(false);
+        setAlert2(false);
       }
     });
   };
@@ -169,4 +170,4 @@ const PollDatesVote = ({ polls, dates, votes, comments, replies }) => {
   );
 };
 
-export default PollDatesVote;
+export default MeetingPollVote;
