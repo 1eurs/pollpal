@@ -98,25 +98,22 @@ class VoteViewSet(viewsets.ModelViewSet):
     serializer_class = VoteSerializer
 
     def create(self, request):
-        voter_ip = request.META.get("REMOTE_ADDR")
-        request.data["voter_ip"] = voter_ip
+        try:
+            voter_ip = request.META.get("REMOTE_ADDR")
+            request.data["voter_ip"] = voter_ip
 
-        if "choice_id" not in request.data:
-            return Response(status=400)
+            if request.data["choice_id"] is None:
+                return Response({"message": "No date choices provided"}, status=400)
 
-        name_data = NameSerializer(
-            data={"name": request.data.get("name"), "name": request.data.get("name")}
-        )
-        if name_data.is_valid():
-            name_data.save()
+            serializer = VoteSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
 
-        serializer = VoteSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response(serializer.data, status=200)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError:
+            return Response(
+                {"message": "You have already voted in this poll."}, status=400
+            )
 
 
 class DatesViewSet(viewsets.ModelViewSet):

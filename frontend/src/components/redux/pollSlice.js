@@ -123,9 +123,6 @@ const pollSlice = createSlice({
       .addCase(fetchComments.fulfilled, (state, action) => {
         state.comments = action.payload;
         state.error = null;
-      })
-      .addCase(voteInDatesPoll.rejected, (state, action) => {
-        state.error = action.error.message;
       });
   },
 });

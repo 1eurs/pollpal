@@ -14,7 +14,7 @@ import SharePoll from "./SharePoll";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import RelativeTime from "./utility/RelativeTime";
 
-const OptionPollResults = ({ polls, choices }) => {
+const OptionsPollResutls = ({ polls, choices }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { poll_id } = useParams();
@@ -137,4 +137,4 @@ const OptionPollResults = ({ polls, choices }) => {
   );
 };
 
-export default OptionPollResults;
+export default OptionsPollResutls;

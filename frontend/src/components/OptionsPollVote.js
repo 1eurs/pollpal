@@ -21,7 +21,7 @@ import CommentPoll from "./CommentPoll";
 import RelativeTime from "./utility/RelativeTime";
 import MyAlert from "./utility/MyAlert";
 import MyBackdrop from "./utility/MyBackdrop";
-const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
+const OptionsPollVote = ({ polls, choices, votes, comments, replies }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -53,25 +53,24 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
   });
 
   const handleVote = () => {
-    if (selectedPoll.require_names && !name) {
-      setAlert3(true);
-    }
-
-    if (!voteData.choice_id) {
-      setAlert2(true);
-    }
-
+    setAlert1(false);
+    setAlert2(false);
     dispatch(voteInPoll({ ...voteData, poll_id: poll_id, name: name })).then(
       (action) => {
-        if (action.type === "polls/vote/fulfilled") {
+        if (action.type === "polls/vote/rejected") {
+          console.log(action.error);
+          if (action.error.message === "No date choices provided") {
+            setAlert2(true);
+          } else if (
+            action.error.message === "You have already voted in this poll."
+          ) {
+            setAlert1(true);
+          }
+        } else {
           setVoteData({});
-          handleOpen();
-          console.log(action);
           setAlert1(false);
           setAlert2(false);
-          setAlert3(false);
-        } else {
-          setAlert1(true);
+          handleOpen();
         }
       }
     );
@@ -195,4 +194,4 @@ const PollOptionsVote = ({ polls, choices, votes, comments, replies }) => {
   );
 };
 
-export default PollOptionsVote;
+export default OptionsPollVote;

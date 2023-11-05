@@ -6,7 +6,7 @@ import NavBar from "./components/Header/NavBar";
 import Hero from "./components/Hero/Hero";
 import ErrorPage from "./components/utility/ErrorPage";
 import CreateForm from "./components/CreateForm";
-import PollOptionsVote from "./components/PollOptionsVote";
+import OptionsPollVote from "./components/OptionsPollVote";
 import Footer from "./components/Footer/Footer";
 import MeetingPollVote from "./components/MeetingPollVote";
 import {
@@ -18,7 +18,7 @@ import {
   fetchReplies,
   fetchVotes,
 } from "./components/redux/pollSlice";
-import OptionPollResults from "./components/OptionPollResutls";
+import OptionsPollResutls from "./components/OptionsPollResutls";
 import MeetingPolllResults from "./components/MeetingPolllResults";
 
 const App = () => {
@@ -47,7 +47,7 @@ const App = () => {
           <Route
             path="/optionsVote/:poll_id"
             element={
-              <PollOptionsVote
+              <OptionsPollVote
                 polls={polls}
                 choices={choices}
                 votes={votes}
@@ -71,7 +71,7 @@ const App = () => {
           <Route
             path="/results/:poll_id"
             element={
-              <OptionPollResults
+              <OptionsPollResutls
                 polls={polls}
                 choices={choices}
                 votes={votes}

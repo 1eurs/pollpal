@@ -3,7 +3,6 @@ import { Box, Button, Container, Typography } from "@mui/material";
 
 import { Link } from "react-router-dom";
 import TrustSection from "./TrustSection";
-import PollOptionsVote from "../PollOptionsVote";
 import FeaturesSection from "./FeaturesSection";
 import GetStartedSection from "./GetStartedSection";
 
@@ -35,9 +34,7 @@ const Hero = () => {
               <Button variant="contained">Create a Poll</Button>
             </Link>
           </Box>
-          <Box>
-            {/* <PollOptionsVote notitle={true} data={HeroPollData} /> */}
-          </Box>
+          <Box></Box>
         </Box>
       </Container>
       <TrustSection />
