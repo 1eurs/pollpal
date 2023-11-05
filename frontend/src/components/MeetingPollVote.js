@@ -52,7 +52,8 @@ const MeetingPollVote = ({ polls, dates, comments, replies }) => {
 
   const handleVote = () => {
     let dateChoices = [];
-
+    setAlert1(false);
+    setAlert2(false);
     for (const date_id in selectedChoices) {
       const obj = {
         date_id: date_id,
@@ -62,12 +63,17 @@ const MeetingPollVote = ({ polls, dates, comments, replies }) => {
     }
 
     let voteDataWithDateChoices = { ...voteData, dateChoices };
-    if (!voteData.dateChoices) {
-      setAlert2(true);
-    }
+
     dispatch(voteInDatesPoll(voteDataWithDateChoices)).then((action) => {
       if (action.type === "polls/datesvote/rejected") {
-        setAlert1(true);
+        console.log(action);
+        if (action.error.message === "No date choices provided") {
+          setAlert2(true);
+        } else if (
+          action.error.message === "You have already voted in this poll."
+        ) {
+          setAlert1(true);
+        }
       } else {
         handleOpen();
         setAlert1(false);

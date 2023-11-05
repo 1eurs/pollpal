@@ -18,9 +18,8 @@ const performApiRequest = async (url, method, data) => {
     });
 
     if (response.status === 200) return response.data;
-    throw new Error(response.data.detail || `Failed to ${method} data`);
   } catch (error) {
-    throw new Error("Network error");
+    throw new Error(error.response.data.message);
   }
 };
 
@@ -124,6 +123,9 @@ const pollSlice = createSlice({
       .addCase(fetchComments.fulfilled, (state, action) => {
         state.comments = action.payload;
         state.error = null;
+      })
+      .addCase(voteInDatesPoll.rejected, (state, action) => {
+        state.error = action.error.message;
       });
   },
 });

@@ -15,6 +15,8 @@ from rest_framework.decorators import action
 from rest_framework import status
 from django.http import Http404
 from pprint import pprint
+from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class PollViewSet(viewsets.ModelViewSet):
@@ -132,23 +134,31 @@ class DateVoteViewSet(viewsets.ModelViewSet):
     serializer_class = DateVoteSerializer
 
     def create(self, request):
-        voter_ip = request.META.get("REMOTE_ADDR")
-        poll_id = request.data.get("poll_id")
-        poll = Poll.objects.get(pk=poll_id)
-        date_choices = request.data.get("dateChoices")
+        try:
+            voter_ip = request.META.get("REMOTE_ADDR")
+            poll_id = request.data.get("poll_id")
+            poll = Poll.objects.get(pk=poll_id)
+            date_choices = request.data.get("dateChoices")
 
-        for choice in date_choices:
-            date_id = choice.get("date_id")
-            can_attend = choice.get("can_attend")
-            date = Date.objects.get(pk=date_id)
+            for choice in date_choices:
+                date_id = choice.get("date_id")
+                can_attend = choice.get("can_attend")
+                date = Date.objects.get(pk=date_id)
 
-            date_vote = DateVote(
-                voter_ip=voter_ip, poll_id=poll, date_id=date, can_attend=can_attend
+                date_vote = DateVote(
+                    voter_ip=voter_ip, poll_id=poll, date_id=date, can_attend=can_attend
+                )
+                date_vote.save()
+
+            serializer = DateVoteSerializer(date_vote)
+            return Response(serializer.data, status=200)
+        except IntegrityError:
+            return Response(
+                {"message": "You have already voted in this poll."}, status=400
             )
-            date_vote.save()
 
-        serializer = DateVoteSerializer(date_vote)
-        return Response(serializer.data, status=200)
+        except Exception as e:
+            return Response({"message": "No date choices provided"}, status=400)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
