@@ -84,7 +84,7 @@ const MeetingPollVote = ({ polls, dates, comments, replies }) => {
 
   const handleResults = () => {
     dispatch(fetchDateVotes());
-    navigate(`/meetingresults/${poll_id}`);
+    navigate(`/results/meeting/${poll_id}`);
   };
 
   if (!selectedPoll) {

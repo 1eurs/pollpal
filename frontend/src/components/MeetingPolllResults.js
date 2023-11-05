@@ -33,7 +33,7 @@ const MeetingPolllResults = ({ polls, dates }) => {
   }, []);
 
   const handleBacktoPoll = () => {
-    navigate(`/datesVote/${poll_id}`);
+    navigate(`/vote/dates/${poll_id}`);
   };
 
   return (

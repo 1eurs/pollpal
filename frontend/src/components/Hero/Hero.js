@@ -30,7 +30,7 @@ const Hero = () => {
               Unlock the power of rapid poll creation with our user-friendly
               platform. Design, share, and gather insights in no time.
             </Typography>
-            <Link to={`create`}>
+            <Link to={`create-poll`}>
               <Button variant="contained">Create a Poll</Button>
             </Link>
           </Box>

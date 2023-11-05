@@ -32,7 +32,7 @@ const OptionsPollResutls = ({ polls, choices }) => {
   };
 
   const handleBacktoPoll = () => {
-    navigate(`/optionsVote/${poll_id}`);
+    navigate(`/vote/options/${poll_id}`);
   };
 
   const colorPalette = [

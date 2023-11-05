@@ -105,7 +105,7 @@ const CreateForm = () => {
             dispatch(fetchDates());
             dispatch(fetchPolls());
             if (pollID) {
-              navigate(`/datesVote/${pollID}`);
+              navigate(`/vote/dates/${pollID}`);
             }
           })
           .catch((error) => {
@@ -118,7 +118,7 @@ const CreateForm = () => {
             dispatch(fetchPolls());
             dispatch(fetchChoices());
             if (pollID) {
-              navigate(`/optionsVote/${pollID}`);
+              navigate(`/vote/options/${pollID}`);
             }
           })
           .catch((error) => {

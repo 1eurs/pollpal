@@ -45,8 +45,8 @@ const MyBackdrop = ({ open, handleClose, poll_id, navigate, dates }) => {
               <Button
                 onClick={() => {
                   dates
-                    ? navigate(`/meetingresults/${poll_id}`)
-                    : navigate(`/results/${poll_id}`);
+                    ? navigate(`/results/meeting/${poll_id}`)
+                    : navigate(`/results/options/${poll_id}`);
                 }}
               >
                 Results

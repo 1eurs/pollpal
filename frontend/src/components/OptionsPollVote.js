@@ -87,7 +87,7 @@ const OptionsPollVote = ({ polls, choices, votes, comments, replies }) => {
         voteCounts[choiceId] = 1;
       }
     }
-    navigate(`/results/${poll_id}`);
+    navigate(`/results/options/${poll_id}`);
   };
 
   return (
