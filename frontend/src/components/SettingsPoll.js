@@ -17,10 +17,12 @@ import { useState } from "react";
 
 const SettingsPoll = ({
   handleCreatePoll,
+  handleCreatePollDraftButton,
   checked,
   setChecked,
   votingSecurityOption,
   setVotingSecurityOption,
+  saveAsDraftButton,
 }) => {
   const handleChangeVoteingSecurity = (event) => {
     setVotingSecurityOption(event.target.value);
@@ -90,6 +92,7 @@ const SettingsPoll = ({
                 <FormControlLabel
                   control={
                     <Switch
+                      disabled
                       name="can_share"
                       checked={checked.can_share}
                       onChange={handleChange("can_share")}
@@ -162,6 +165,7 @@ const SettingsPoll = ({
                 <FormControlLabel
                   control={
                     <Switch
+                      disabled
                       checked={checked.captcha}
                       name="captcha"
                       onChange={handleChange("captcha")}
@@ -178,11 +182,13 @@ const SettingsPoll = ({
               sx={{ padding: "0.5rem 2rem" }}
               onClick={handleCreatePoll}
             >
-              Create poll
+              {handleCreatePollDraftButton}
             </Button>
-            <Button variant="contained" sx={{ padding: "0.5rem 2rem" }}>
-              Save as draft
-            </Button>
+            {saveAsDraftButton && (
+              <Button variant="contained" sx={{ padding: "0.5rem 2rem" }}>
+                Save as draft
+              </Button>
+            )}
           </Box>
         </CardContent>
       </Card>

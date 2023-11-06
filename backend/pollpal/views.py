@@ -1,5 +1,6 @@
-from .models import Poll, Choice, Vote, Date, Time, DateVote, Comment
+from .models import CustomUser, Poll, Choice, Vote, Date, Time, DateVote, Comment
 from .serializers import (
+    CustomUserSerializer,
     PollSerializer,
     ChoiceSerializer,
     VoteSerializer,
@@ -17,6 +18,11 @@ from django.http import Http404
 from pprint import pprint
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
+
+
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
 
 
 class PollViewSet(viewsets.ModelViewSet):

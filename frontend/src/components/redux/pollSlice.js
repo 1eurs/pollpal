@@ -8,7 +8,7 @@ const axiosConfig = {
   },
 };
 
-const performApiRequest = async (url, method, data) => {
+export const performApiRequest = async (url, method, data) => {
   try {
     const response = await axios.request({
       url: `${API}/${url}`,

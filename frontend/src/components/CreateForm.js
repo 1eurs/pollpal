@@ -131,79 +131,72 @@ const CreateForm = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        pb: "2rem",
-      }}
-    >
-      <Container maxWidth="sm">
-        <PageTitle
-          title="Create a Poll"
-          description="Complete the below fields to create your poll."
-          textAlign="center"
-          variant="h1"
-        />
+    <Container maxWidth="sm">
+      <PageTitle
+        title="Create a Poll"
+        description="Complete the below fields to create your poll."
+        textAlign="center"
+        variant="h1"
+      />
 
-        <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
-          <CardContent>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-                marginBottom: "1.5rem",
-              }}
+      <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
+        <CardContent>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+              marginBottom: "1.5rem",
+            }}
+          >
+            <TextField
+              id="outlined-basic"
+              label="Title"
+              variant="outlined"
+              value={title}
+              onChange={handleTitleChange}
+              fullWidth
+            />
+            <TextField
+              id="outlined-select"
+              select
+              label="Voting types"
+              value={optionsFormData.votingType}
+              onChange={handleVotingTypeChange}
+              variant="outlined"
+              fullWidth
             >
-              <TextField
-                id="outlined-basic"
-                label="Title"
-                variant="outlined"
-                value={title}
-                onChange={handleTitleChange}
-                fullWidth
-              />
-              <TextField
-                id="outlined-select"
-                select
-                label="Voting types"
-                value={optionsFormData.votingType}
-                onChange={handleVotingTypeChange}
-                variant="outlined"
-                fullWidth
-              >
-                {VotingType.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Box>
+              {VotingType.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
 
-            {isMeetingForm ? (
-              <CalendarForm
-                datesWithTimeSlots={datesFormData}
-                setDatesWithTimeSlots={setDatesFormData}
-              />
-            ) : (
-              <OptionsForm
-                optionsFormData={optionsFormData}
-                setOptionsFormData={setOptionsFormData}
-              />
-            )}
-          </CardContent>
-        </Card>
-        <SettingsPoll
-          handleCreatePoll={handleCreatePoll}
-          checked={checked}
-          setChecked={setChecked}
-          votingSecurityOption={votingSecurityOption}
-          setVotingSecurityOption={setVotingSecurityOption}
-        />
-      </Container>
-    </Box>
+          {isMeetingForm ? (
+            <CalendarForm
+              datesWithTimeSlots={datesFormData}
+              setDatesWithTimeSlots={setDatesFormData}
+            />
+          ) : (
+            <OptionsForm
+              optionsFormData={optionsFormData}
+              setOptionsFormData={setOptionsFormData}
+            />
+          )}
+        </CardContent>
+      </Card>
+      <SettingsPoll
+        handleCreatePoll={handleCreatePoll}
+        handleCreatePollDraftButton="Create Poll"
+        saveAsDraftButton={true}
+        checked={checked}
+        setChecked={setChecked}
+        votingSecurityOption={votingSecurityOption}
+        setVotingSecurityOption={setVotingSecurityOption}
+      />
+    </Container>
   );
 };
 

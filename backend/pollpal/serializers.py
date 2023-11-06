@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Poll, Choice, Vote, Date, Time, DateVote, Name, Comment
+from .models import CustomUser, Poll, Choice, Vote, Date, Time, DateVote, Name, Comment
+from django.contrib.auth import get_user_model
 
 
 class PollSerializer(serializers.ModelSerializer):
@@ -50,4 +51,10 @@ class NameSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
+        fields = "__all__"
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
         fields = "__all__"

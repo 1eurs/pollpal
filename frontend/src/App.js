@@ -20,6 +20,11 @@ import {
 } from "./components/redux/pollSlice";
 import OptionsPollResutls from "./components/OptionsPollResutls";
 import MeetingPolllResults from "./components/MeetingPolllResults";
+import PollDrafts from "./components/PollDrafts";
+import EditOptionsPollForm from "./components/EditOptionsPollForm";
+import EditMeetingPollForm from "./components/EditMeetingPollForm";
+import Signup from "./components/Auth/Signup";
+import Login from "./components/Auth/Login";
 const App = () => {
   const dispatch = useDispatch();
 
@@ -42,7 +47,18 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Hero />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/create-poll" element={<CreateForm pollID={pollID} />} />
+          <Route path="/poll-drafts" element={<PollDrafts polls={polls} />} />
+          <Route
+            path="/edit/options/:poll_id"
+            element={<EditOptionsPollForm polls={polls} choices={choices} />}
+          />
+          <Route
+            path="/edit/dates/:poll_id"
+            element={<EditMeetingPollForm polls={polls} dates={dates} />}
+          />
           <Route
             path="/vote/options/:poll_id"
             element={
@@ -79,6 +95,10 @@ const App = () => {
               />
             }
           />
+          <Route
+            path="/results/meeting/:poll_id"
+            element={<MeetingPolllResults polls={polls} dates={dates} />}
+          />{" "}
           <Route
             path="/results/meeting/:poll_id"
             element={<MeetingPolllResults polls={polls} dates={dates} />}

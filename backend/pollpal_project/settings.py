@@ -28,16 +28,18 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+AUTH_USER_MODEL = "pollpal.CustomUser"
+
 # Application definition
 
 INSTALLED_APPS = [
+    "pollpal",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "pollpal",
     "rest_framework",
     "corsheaders",
     "django_extensions",
@@ -57,6 +59,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = "pollpal_project.urls"
 
 TEMPLATES = [
@@ -76,7 +79,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "pollpal_project.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

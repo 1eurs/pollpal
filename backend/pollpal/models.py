@@ -2,6 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 from django.db import IntegrityError
+from django.contrib.auth.models import AbstractUser
+
+
+class CustomUser(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(unique=True)
+    created_polls = models.ManyToManyField(
+        "Poll", related_name="created_by_user", blank=True
+    )
 
 
 class Poll(models.Model):
@@ -21,7 +30,7 @@ class Poll(models.Model):
     poll_type = models.CharField(
         max_length=300, choices=POLL_TYPE_CHOICES, default="choices"
     )
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     allow_comments = models.BooleanField(default=False)
@@ -78,7 +87,6 @@ class Vote(models.Model):
     )
     poll_id = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name="votes")
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def is_unique_vote_per_poll_and_voter(self):
         if self.poll_id.voting_security_option == "ip":
@@ -112,7 +120,6 @@ class DateVote(models.Model):
     )
     can_attend = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
         if self.poll_id.voting_security_option == "ip":
