@@ -11,7 +11,6 @@ from .views import (
     TimesViewSet,
     CommentViewSet,
 )
-from django.contrib.auth.views import LoginView
 
 router = DefaultRouter()
 router.register(r"polls", PollViewSet)
@@ -22,8 +21,8 @@ router.register(r"times", TimesViewSet)
 router.register(r"datevotes", DateVoteViewSet)
 router.register(r"comments", CommentViewSet)
 router.register(r"users", CustomUserViewSet)
+
 urlpatterns = [
-    path("login/", LoginView.as_view(), name="login"),
     path(
         "comments/top-level/",
         CommentViewSet.as_view({"get": "get_top_level_comments"}),

@@ -1,28 +1,22 @@
 from .models import CustomUser, Poll, Choice, Vote, Date, Time, DateVote, Comment
 from .serializers import (
-    CustomUserSerializer,
     PollSerializer,
     ChoiceSerializer,
+    CustomUserSerializer,
     VoteSerializer,
     DateSerializer,
     TimeSerializer,
     DateVoteSerializer,
-    NameSerializer,
     CommentSerializer,
 )
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
-from django.http import Http404
-from pprint import pprint
 from django.db import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
-
-
-class CustomUserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class PollViewSet(viewsets.ModelViewSet):
@@ -177,3 +171,31 @@ class CommentViewSet(viewsets.ModelViewSet):
         comments_with_parents = Comment.objects.exclude(parent_comment=None)
         serializer = self.get_serializer(comments_with_parents, many=True)
         return Response(serializer.data)
+
+
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        if response.status_code == 200:
+            user = CustomUser.objects.get(email=request.data["email"])
+            user = {
+                "user_id": user.id,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+            }
+            response.data["user"] = user
+
+        return response

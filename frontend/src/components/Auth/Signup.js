@@ -7,7 +7,8 @@ import { signup } from "../redux/authSlice";
 const Signup = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    username: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
   });
@@ -22,18 +23,24 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(signup(formData)).then((action) => {
-      console.log(action);
-    });
+    dispatch(signup(formData));
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <TextField
-        name="username"
-        label="Username"
+        name="first_name"
+        label="First Name"
         variant="outlined"
-        value={formData.username}
+        value={formData.first_name}
+        onChange={handleChange}
+        required
+      />{" "}
+      <TextField
+        name="last_name"
+        label="Last Name"
+        variant="outlined"
+        value={formData.last_name}
         onChange={handleChange}
         required
       />

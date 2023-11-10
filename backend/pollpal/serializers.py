@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import CustomUser, Poll, Choice, Vote, Date, Time, DateVote, Name, Comment
-from django.contrib.auth import get_user_model
 
 
 class PollSerializer(serializers.ModelSerializer):
@@ -57,4 +56,14 @@ class CommentSerializer(serializers.ModelSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = "__all__"
+        fields = ("email", "first_name", "last_name", "password")
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(
+            email=validated_data["email"],
+            first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"],
+            password=validated_data["password"],
+        )
+        return user

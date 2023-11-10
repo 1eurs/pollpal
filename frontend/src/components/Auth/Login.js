@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
-import { login } from "../redux/authSlice";
+import { authenticateUser } from "../redux/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+    email: "",
+    email: "",
   });
 
   const handleChange = (e) => {
@@ -22,18 +22,16 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login(formData)).then((action) => {
-      console.log(action);
-    });
+    dispatch(authenticateUser(formData));
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <TextField
-        name="username"
-        label="Username"
+        name="email"
+        label="Email"
         variant="outlined"
-        value={formData.username}
+        value={formData.Email}
         onChange={handleChange}
         required
       />
@@ -42,7 +40,7 @@ const Login = () => {
         label="Password"
         type="password"
         variant="outlined"
-        value={formData.password}
+        value={formData.Password}
         onChange={handleChange}
         required
       />

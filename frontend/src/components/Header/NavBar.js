@@ -6,39 +6,38 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
-const NavBar = () => {
+import { logout } from "../redux/authSlice";
+import { useDispatch } from "react-redux";
+
+const NavBar = ({ isAuthenticated, user }) => {
+  const dispatch = useDispatch();
+
   return (
-    <AppBar elevation={0} position="static" sx={{ mb: 5 }}>
-      <Container>
-        <Toolbar>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
+    <Container>
+      <Box sx={{ display: "flex" }}>
+        <Typography>PollPal</Typography>
+
+        {isAuthenticated ? (
+          <Button
+            onClick={() => {
+              console.log("logout");
+              dispatch(logout());
             }}
           >
-            <Box>
-              <Typography
-                variant="logo"
-                sx={{
-                  flexGrow: 1,
-                }}
-              >
-                <QueryStatsIcon fontSize="medium" />
-                PollPal
-              </Typography>
-            </Box>
-            <Box>
-              <Button>Login</Button>
-              <Button>Singup</Button>
-            </Box>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            Logout
+          </Button>
+        ) : (
+          <>
+            <a href="/login">
+              <Button variant="contained">Login</Button>
+            </a>
+            <a href="/signup">
+              <Button variant="contained">Signup</Button>
+            </a>
+          </>
+        )}
+      </Box>
+    </Container>
   );
 };
 
