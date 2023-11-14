@@ -29,13 +29,14 @@ const Signup = () => {
     e.preventDefault();
     dispatch(signup(formData)).then((action) => {
       if (action.status === 201) {
-        nevigate("/login");
+        console.log("User created successfully");
         setFormData({
           first_name: "",
           last_name: "",
           email: "",
           password: "",
         });
+        nevigate("/login");
       }
     });
   };

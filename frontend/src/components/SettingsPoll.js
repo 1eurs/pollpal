@@ -17,7 +17,8 @@ import { useState } from "react";
 
 const SettingsPoll = ({
   handleCreatePoll,
-  handleCreatePollDraftButton,
+  handleCreateDraftPoll,
+  handleCreatePollButton,
   checked,
   setChecked,
   votingSecurityOption,
@@ -182,10 +183,14 @@ const SettingsPoll = ({
               sx={{ padding: "0.5rem 2rem" }}
               onClick={handleCreatePoll}
             >
-              {handleCreatePollDraftButton}
+              {handleCreatePollButton}
             </Button>
             {saveAsDraftButton && (
-              <Button variant="contained" sx={{ padding: "0.5rem 2rem" }}>
+              <Button
+                onClick={handleCreateDraftPoll}
+                variant="contained"
+                sx={{ padding: "0.5rem 2rem" }}
+              >
                 Save as draft
               </Button>
             )}

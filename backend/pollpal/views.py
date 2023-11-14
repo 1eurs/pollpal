@@ -14,9 +14,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
 from django.db import IntegrityError
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class PollViewSet(viewsets.ModelViewSet):
@@ -26,6 +23,7 @@ class PollViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["post"])
     def create_with_choices(self, request):
         poll_data = request.data
+        print("Poll data:", poll_data)
         choices_data = poll_data.pop("choices", [])
         poll_serializer = PollSerializer(data=poll_data)
 
@@ -38,6 +36,7 @@ class PollViewSet(viewsets.ModelViewSet):
                     choice_serializer.save()
                 else:
                     poll.delete()
+                    print("Choice serializer errors:", choice_serializer.errors)
                     return Response(
                         choice_serializer.errors, status=status.HTTP_400_BAD_REQUEST
                     )
@@ -47,7 +46,9 @@ class PollViewSet(viewsets.ModelViewSet):
                 "poll_id": poll.id,
             }
             return Response(response_data, status=200)
-        return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print("Poll serializer errors:", poll_serializer.errors)
+            return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=["post"])
     def create_poll_with_dates_times(self, request):

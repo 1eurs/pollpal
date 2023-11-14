@@ -50,11 +50,10 @@ const App = () => {
           <Route path="/" element={<Hero />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/create-poll" element={<CreateForm user={user} />} />
+          <Route path="/create/poll" element={<CreateForm user={user} />} />
           <Route
-            path="/poll-drafts"
-            element={<PollDrafts polls={polls} />}
-            user={user}
+            path="/drafts"
+            element={<PollDrafts polls={polls} user={user} />}
           />
           <Route
             path="/edit/options/:poll_id"

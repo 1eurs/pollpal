@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import { useDispatch } from "react-redux";
 import {
   createPollWithDates,
@@ -9,7 +8,6 @@ import {
   fetchDates,
 } from "./redux/pollSlice";
 import { useNavigate } from "react-router-dom";
-
 import {
   Box,
   Card,
@@ -36,9 +34,7 @@ const VotingType = [
 
 const CreateForm = ({ user }) => {
   const [votingSecurityOption, setVotingSecurityOption] = useState("ip");
-
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const [checked, setChecked] = useState({
@@ -49,7 +45,6 @@ const CreateForm = ({ user }) => {
   });
 
   const [isMeetingForm, setMeetingForm] = useState(false);
-
   const [title, setTitle] = useState("");
 
   const [optionsFormData, setOptionsFormData] = useState({
@@ -69,66 +64,49 @@ const CreateForm = ({ user }) => {
     setMeetingForm(selectedVotingType === "dates");
   };
 
-  const handleCreatePoll = (e) => {
+  const handleCreate = (e, isActive = true) => {
     e.preventDefault();
-    let pollData = {};
+    let pollData = {
+      question: title,
+      poll_type: isMeetingForm ? "dates" : "choices",
+      allow_comments: checked.allow_comments,
+      require_names: checked.require_names,
+      can_share: checked.can_share,
+      captcha: checked.captcha,
+      voting_security_option: votingSecurityOption,
+      created_by: user ? user.user_id : null,
+      isActive: isActive,
+      choices: optionsFormData.options,
+      dates: datesFormData,
+    };
 
-    if (isMeetingForm) {
-      pollData = {
-        question: title,
-        poll_type: "dates",
-        dates: datesFormData,
-        allow_comments: checked.allow_comments,
-        require_names: checked.require_names,
-        can_share: checked.can_share,
-        captcha: checked.captcha,
-        voting_security_option: votingSecurityOption,
-      };
-    } else {
-      pollData = {
-        question: title,
-        poll_type: optionsFormData.votingType,
-        choices: optionsFormData.options,
-        allow_comments: checked.allow_comments,
-        require_names: checked.require_names,
-        can_share: checked.can_share,
-        captcha: checked.captcha,
-        voting_security_option: votingSecurityOption,
-        created_by: user.user_id,
-      };
-    }
     try {
-      if (isMeetingForm) {
-        console.log(pollData);
-        dispatch(createPollWithDates(pollData))
-          .then((action) => {
-            let pollID = action.payload.poll_id;
-            dispatch(fetchDates());
-            dispatch(fetchPolls());
-            if (pollID) {
-              navigate(`/vote/dates/${pollID}`);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        dispatch(createPollWithChoices(pollData))
-          .then((action) => {
-            let pollID = action.payload.poll_id;
-            dispatch(fetchPolls());
-            dispatch(fetchChoices());
-            if (pollID) {
-              navigate(`/vote/options/${pollID}`);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
+      dispatch(
+        isMeetingForm
+          ? createPollWithDates(pollData)
+          : createPollWithChoices(pollData)
+      ).then((action) => {
+        let pollID = action.payload.poll_id;
+        dispatch(fetchDates());
+        dispatch(fetchPolls());
+        dispatch(fetchChoices());
+        if (pollID) {
+          navigate(
+            isMeetingForm ? `/vote/dates/${pollID}` : `/vote/options/${pollID}`
+          );
+        }
+      });
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const handleCreatePoll = (e) => {
+    handleCreate(e, true);
+  };
+
+  const handleCreateDraftPoll = (e) => {
+    handleCreate(e, false);
   };
 
   return (
@@ -190,8 +168,9 @@ const CreateForm = ({ user }) => {
       </Card>
       <SettingsPoll
         handleCreatePoll={handleCreatePoll}
-        handleCreatePollDraftButton="Create Poll"
+        handleCreatePollButton="Create Poll"
         saveAsDraftButton={true}
+        handleCreateDraftPoll={handleCreateDraftPoll}
         checked={checked}
         setChecked={setChecked}
         votingSecurityOption={votingSecurityOption}
