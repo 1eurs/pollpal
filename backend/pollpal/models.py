@@ -53,6 +53,7 @@ class Poll(models.Model):
         max_length=300, choices=POLL_TYPE_CHOICES, default="choices"
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     allow_comments = models.BooleanField(default=False)
     require_names = models.BooleanField(default=False)

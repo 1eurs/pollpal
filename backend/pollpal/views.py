@@ -183,19 +183,3 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-
-        if response.status_code == 200:
-            user = CustomUser.objects.get(email=request.data["email"])
-            user = {
-                "user_id": user.id,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-            }
-            response.data["user"] = user
-
-        return response

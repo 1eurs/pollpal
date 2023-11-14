@@ -3,13 +3,17 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
 import { authenticateUser } from "../redux/authSlice";
+import { useNavigate } from "react-router-dom";
+import { Box, Card, CardContent, Container } from "@mui/material";
+import PageTitle from "../utility/PageTitle";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const nevigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
-    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -22,32 +26,60 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(authenticateUser(formData));
+    dispatch(authenticateUser(formData)).then((action) => {
+      if (action.status === 200) {
+        nevigate("/");
+      }
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        name="email"
-        label="Email"
-        variant="outlined"
-        value={formData.Email}
-        onChange={handleChange}
-        required
+    <Container maxWidth="sm">
+      <PageTitle
+        title="PollPal - Log In"
+        description="Enter your credentials to log in."
+        textAlign="center"
+        variant="h1"
       />
-      <TextField
-        name="password"
-        label="Password"
-        type="password"
-        variant="outlined"
-        value={formData.Password}
-        onChange={handleChange}
-        required
-      />
-      <Button type="submit" variant="contained" color="primary">
-        Log In
-      </Button>
-    </form>
+      <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Box>
+                <TextField
+                  fullWidth
+                  name="email"
+                  label="Email"
+                  variant="outlined"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </Box>
+              <Box>
+                <TextField
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </Box>
+              <Box
+                sx={{ display: "flex", flexDirection: "row-reverse", pt: 2 }}
+              >
+                <Button type="submit" variant="contained" color="primary">
+                  Log In
+                </Button>
+              </Box>
+            </Box>
+          </form>
+        </CardContent>
+      </Card>
+    </Container>
   );
 };
 

@@ -34,7 +34,7 @@ const VotingType = [
   },
 ];
 
-const CreateForm = () => {
+const CreateForm = ({ user }) => {
   const [votingSecurityOption, setVotingSecurityOption] = useState("ip");
 
   const navigate = useNavigate();
@@ -94,6 +94,7 @@ const CreateForm = () => {
         can_share: checked.can_share,
         captcha: checked.captcha,
         voting_security_option: votingSecurityOption,
+        created_by: user.user_id,
       };
     }
     try {

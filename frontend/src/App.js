@@ -25,7 +25,6 @@ import EditOptionsPollForm from "./components/EditOptionsPollForm";
 import EditMeetingPollForm from "./components/EditMeetingPollForm";
 import Signup from "./components/Auth/Signup";
 import Login from "./components/Auth/Login";
-import { authenticateUser } from "./components/redux/authSlice";
 const App = () => {
   const dispatch = useDispatch();
 
@@ -43,12 +42,6 @@ const App = () => {
     useSelector((state) => state.polls);
 
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    dispatch(authenticateUser({ token }));
-  }
   return (
     <>
       <NavBar isAuthenticated={isAuthenticated} user={user} />
@@ -57,7 +50,7 @@ const App = () => {
           <Route path="/" element={<Hero />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/create-poll" element={<CreateForm pollID={pollID} />} />
+          <Route path="/create-poll" element={<CreateForm user={user} />} />
           <Route
             path="/poll-drafts"
             element={<PollDrafts polls={polls} />}
