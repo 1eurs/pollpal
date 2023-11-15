@@ -2,15 +2,24 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
-import { signup } from "../redux/authSlice";
+import { login, signup } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Box, Card, CardContent, Container } from "@mui/material";
 import PageTitle from "../utility/PageTitle";
+import MyAlert from "../utility/MyAlert";
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const nevigate = useNavigate();
+  const navigate = useNavigate();
+  const [alert1, setAlert1] = useState(false);
   const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+  });
+
+  const [formErrors, setFormErrors] = useState({
     first_name: "",
     last_name: "",
     email: "",
@@ -25,20 +34,54 @@ const Signup = () => {
     });
   };
 
+  const validateForm = () => {
+    const errors = {};
+    let isValid = true;
+    if (!formData.first_name.trim()) {
+      errors.first_name = "First Name is required";
+      isValid = false;
+    }
+
+    if (!formData.last_name.trim()) {
+      errors.last_name = "Last Name is required";
+      isValid = false;
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Invalid email address";
+      isValid = false;
+    }
+
+    if (!formData.password.trim()) {
+      errors.password = "Password is required";
+      isValid = false;
+    } else if (formData.password.length < 8) {
+      errors.password = "Password must be at least 8 characters long";
+      isValid = false;
+    } else if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(formData.password)) {
+      errors.password = "Password must contain both letters and numbers";
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(signup(formData)).then((action) => {
-      if (action.status === 201) {
-        console.log("User created successfully");
-        setFormData({
-          first_name: "",
-          last_name: "",
-          email: "",
-          password: "",
-        });
-        nevigate("/login");
-      }
-    });
+
+    if (validateForm()) {
+      dispatch(signup(formData)).then((action) => {
+        if (action.type === "user/signup/fulfilled") {
+          navigate("/login");
+        } else if (action.type === "user/signup/rejected") {
+          setAlert1(true);
+        }
+      });
+    }
   };
 
   return (
@@ -62,6 +105,8 @@ const Signup = () => {
                   value={formData.first_name}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.first_name}
+                  helperText={formErrors.first_name}
                 />
               </Box>
               <Box>
@@ -73,6 +118,8 @@ const Signup = () => {
                   value={formData.last_name}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.last_name}
+                  helperText={formErrors.last_name}
                 />
               </Box>
               <Box>
@@ -84,6 +131,8 @@ const Signup = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.email}
+                  helperText={formErrors.email}
                 />
               </Box>
               <Box>
@@ -96,9 +145,19 @@ const Signup = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.password}
+                  helperText={formErrors.password}
                 />
               </Box>
             </Box>
+            {alert1 && (
+              <MyAlert
+                severity="error"
+                message={
+                  formErrors.email || "User with this email already exists."
+                }
+              />
+            )}
             <Box sx={{ display: "flex", flexDirection: "row-reverse", pt: 2 }}>
               <Button type="submit" variant="contained" color="primary">
                 Sign Up

@@ -7,9 +7,9 @@ export const signup = createAsyncThunk("user/signup", async (userData) => {
   try {
     const response = await axios.post(`${API}/api/users/`, userData);
 
-    return response;
+    return response.data;
   } catch (error) {
-    throw Error(error);
+    throw error.response.data;
   }
 });
 
@@ -17,8 +17,10 @@ export const authenticateUser = (formData) => async (dispatch) => {
   try {
     const response = await axios.post(`${API}/api/token/`, formData);
     dispatch(login(response.data));
-    return response;
-  } catch (error) {}
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
 };
 const storedAccessToken = localStorage.getItem("access_token");
 const authSlice = createSlice({
@@ -39,6 +41,11 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(signup.fulfilled, (state, action) => {})
+      .addCase(signup.rejected, (state, action) => {});
   },
 });
 export const { login, logout } = authSlice.actions;

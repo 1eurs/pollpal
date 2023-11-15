@@ -6,11 +6,12 @@ import { authenticateUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Box, Card, CardContent, Container } from "@mui/material";
 import PageTitle from "../utility/PageTitle";
+import MyAlert from "../utility/MyAlert";
 
 const Login = () => {
   const dispatch = useDispatch();
   const nevigate = useNavigate();
-
+  const [alert1, setAlert1] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,9 +27,12 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setAlert1(false);
     dispatch(authenticateUser(formData)).then((action) => {
-      if (action.status === 200) {
+      if (action.access) {
         nevigate("/");
+      } else {
+        setAlert1(true);
       }
     });
   };
@@ -68,6 +72,9 @@ const Login = () => {
                   required
                 />
               </Box>
+              {alert1 && (
+                <MyAlert severity="error" message="Invalid credentials" />
+              )}
               <Box
                 sx={{ display: "flex", flexDirection: "row-reverse", pt: 2 }}
               >
