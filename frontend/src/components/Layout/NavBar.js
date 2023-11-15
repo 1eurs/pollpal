@@ -8,9 +8,11 @@ import {
 } from "@mui/material";
 import { logout } from "../redux/authSlice";
 import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 const NavBar = ({ isAuthenticated, user }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <Container>
@@ -20,20 +22,20 @@ const NavBar = ({ isAuthenticated, user }) => {
         {isAuthenticated ? (
           <Button
             onClick={() => {
-              console.log("logout");
               dispatch(logout());
+              navigate("/");
             }}
           >
             Logout
           </Button>
         ) : (
           <>
-            <a href="/login">
+            <Link to="/login">
               <Button variant="contained">Login</Button>
-            </a>
-            <a href="/signup">
+            </Link>
+            <Link to="/login">
               <Button variant="contained">Signup</Button>
-            </a>
+            </Link>
           </>
         )}
       </Box>

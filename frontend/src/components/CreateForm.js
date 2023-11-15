@@ -75,7 +75,7 @@ const CreateForm = ({ user }) => {
       captcha: checked.captcha,
       voting_security_option: votingSecurityOption,
       created_by: user ? user.user_id : null,
-      isActive: isActive,
+      is_active: isActive,
       choices: optionsFormData.options,
       dates: datesFormData,
     };
