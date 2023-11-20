@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import SharePoll from "./SharePoll";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import RelativeTime from "./utility/RelativeTime";
+import PageTitle from "./utility/PageTitle";
 
 const OptionsPollResutls = ({ polls, choices }) => {
   const dispatch = useDispatch();
@@ -61,6 +62,12 @@ const OptionsPollResutls = ({ polls, choices }) => {
 
   return (
     <Container maxWidth="sm">
+      <PageTitle
+        title="Poll Results"
+        description="See the results of poll."
+        textAlign="center"
+        variant="h1"
+      />
       <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
         <CardContent>
           <Box sx={{ pb: 3 }}>

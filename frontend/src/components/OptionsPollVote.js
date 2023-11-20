@@ -21,6 +21,7 @@ import CommentPoll from "./CommentPoll";
 import RelativeTime from "./utility/RelativeTime";
 import MyAlert from "./utility/MyAlert";
 import MyBackdrop from "./utility/MyBackdrop";
+import PageTitle from "./utility/PageTitle";
 const OptionsPollVote = ({ polls, choices, votes, comments, replies }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -92,6 +93,12 @@ const OptionsPollVote = ({ polls, choices, votes, comments, replies }) => {
 
   return (
     <Container maxWidth="sm">
+      <PageTitle
+        title="Vote in the Poll"
+        description="Express your opinion by voting in this poll. Make your choice and see the results!"
+        textAlign="center"
+        variant="h1"
+      />
       <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
         <CardContent>
           <FormControl>

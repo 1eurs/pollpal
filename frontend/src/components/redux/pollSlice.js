@@ -46,6 +46,9 @@ export const createPollWithChoices = createAsyncThunk(
 export const fetchPolls = createAsyncThunk("polls/fetch", async () =>
   performApiRequest("api/polls", "get")
 );
+export const DeletePoll = createAsyncThunk("polls/delete", async (poll_id) =>
+  performApiRequest("api/polls", "delete", poll_id)
+);
 
 export const fetchChoices = createAsyncThunk("choices/fetch", async () =>
   performApiRequest("api/choices", "get")

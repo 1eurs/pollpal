@@ -19,6 +19,7 @@ import {
 import PageTitle from "./utility/PageTitle";
 import OptionsForm from "./Forms/OptionsForm";
 import SettingsPoll from "./SettingsPoll";
+import MyAlert from "./utility/MyAlert";
 
 const EditOptionsPollForm = ({ polls, choices }) => {
   const { poll_id } = useParams();
@@ -118,7 +119,7 @@ const EditOptionsPollForm = ({ polls, choices }) => {
       </Card>
       <SettingsPoll
         handleCreatePoll={handleCreatePoll}
-        handleCreatePollDraftButton="Update Poll"
+        handleCreatePollButton="Update Poll"
         checked={checked}
         setChecked={setChecked}
         votingSecurityOption={votingSecurityOption}

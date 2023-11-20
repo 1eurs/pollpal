@@ -120,7 +120,7 @@ const EditMeetingPollForm = ({ polls, dates }) => {
       </Card>
       <SettingsPoll
         handleCreatePoll={handleCreatePoll}
-        handleCreatePollDraftButton="Update Poll"
+        handleCreatePollButton="Update Poll"
         checked={checked}
         setChecked={setChecked}
         votingSecurityOption={votingSecurityOption}

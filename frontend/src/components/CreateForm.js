@@ -64,7 +64,7 @@ const CreateForm = ({ user }) => {
     setMeetingForm(selectedVotingType === "dates");
   };
 
-  const handleCreate = (e, isActive = true) => {
+  const handleCreate = (e, isActive = true, isDraft) => {
     e.preventDefault();
     let pollData = {
       question: title,
@@ -91,6 +91,10 @@ const CreateForm = ({ user }) => {
         dispatch(fetchPolls());
         dispatch(fetchChoices());
         if (pollID) {
+          if (isDraft) {
+            navigate(`/drafts`);
+            return;
+          }
           navigate(
             isMeetingForm ? `/vote/dates/${pollID}` : `/vote/options/${pollID}`
           );
@@ -106,7 +110,7 @@ const CreateForm = ({ user }) => {
   };
 
   const handleCreateDraftPoll = (e) => {
-    handleCreate(e, false);
+    handleCreate(e, false, true);
   };
 
   return (

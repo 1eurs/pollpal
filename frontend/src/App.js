@@ -2,12 +2,10 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import NavBar from "./components/Layout/NavBar";
 import Hero from "./components/Hero/Hero";
 import ErrorPage from "./components/utility/ErrorPage";
 import CreateForm from "./components/CreateForm";
 import OptionsPollVote from "./components/OptionsPollVote";
-import Footer from "./components/Layout/Footer";
 import MeetingPollVote from "./components/MeetingPollVote";
 import {
   fetchChoices,

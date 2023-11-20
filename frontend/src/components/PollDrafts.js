@@ -17,14 +17,25 @@ import dayjs from "dayjs";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
+import MyAlert from "./utility/MyAlert";
+import { useDispatch } from "react-redux";
+import { DeletePoll } from "./redux/pollSlice";
 const options = ["Duplicate", "Delete", "Share"];
 
 const PollDrafts = ({ polls, user }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedPollId, setSelectedPollId] = useState(null);
-  const handleButtonClick = (id, type) => {
-    if (type === "choices") navigate(`/edit/options/${id}`);
-    if (type === "dates") navigate(`/edit/dates/${id}`);
+  const handleButtonClick = (id, type, isActive) => {
+    if (type === "choices" && isActive) {
+      navigate(`/vote/options/${id}`);
+    } else if (type === "choices") {
+      navigate(`/edit/options/${id}`);
+    } else if (type === "dates") {
+      navigate(`/edit/dates/${id}`);
+    } else if (type === "dates" && isActive) {
+      navigate(`/vote/dates/${id}`);
+    }
   };
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -47,9 +58,9 @@ const PollDrafts = ({ polls, user }) => {
     if (option === "Duplicate" && selectedPollId) {
       console.log("Duplicate");
     } else if (option === "Delete" && selectedPollId) {
-      console.log("Duplicate");
+      dispatch(DeletePoll(selectedPollId));
     } else if (option === "Share" && selectedPollId) {
-      console.log("Duplicate");
+      console.log("Share");
     }
 
     handleClose();
@@ -135,7 +146,11 @@ const PollDrafts = ({ polls, user }) => {
                         item
                         xs
                         onClick={() =>
-                          handleButtonClick(poll.id, poll.poll_type)
+                          handleButtonClick(
+                            poll.id,
+                            poll.poll_type,
+                            poll.is_active
+                          )
                         }
                         sx={{ cursor: "pointer" }}
                       >
@@ -171,7 +186,11 @@ const PollDrafts = ({ polls, user }) => {
                     justifyContent="center"
                     alignItems="center"
                   >
-                    <Chip label="draft" size="small" variant="outlined" />
+                    {poll.is_active ? (
+                      <Chip label="Live" size="small" variant="outlined" />
+                    ) : (
+                      <Chip label="draft" size="small" variant="outlined" />
+                    )}
                   </Grid>
                   <Grid
                     item
