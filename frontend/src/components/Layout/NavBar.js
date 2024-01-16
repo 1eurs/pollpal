@@ -1,25 +1,17 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import HowToVoteIcon from "@mui/icons-material/HowToVote";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
-import HowToVoteIcon from "@mui/icons-material/HowToVote";
+import AdbIcon from "@mui/icons-material/Adb";
+
 const pages = ["Create Poll", "Demo", "Pricing"];
 const settings = ["Dashboard", "Logout"];
 
 const NavBar = ({ isAuthenticated }) => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -28,6 +20,7 @@ const NavBar = ({ isAuthenticated }) => {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -58,30 +51,29 @@ const NavBar = ({ isAuthenticated }) => {
       navigate("/pricing");
     }
   };
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="primary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <HowToVoteIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
-            component="a"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
+              ...theme.typography.logo,
               color: "inherit",
               textDecoration: "none",
             }}
           >
-            <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-              POLLPAL
-            </Link>
+            POLLPAL
           </Typography>
 
+          {/* Mobile View - Start */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -126,25 +118,26 @@ const NavBar = ({ isAuthenticated }) => {
               ))}
             </Menu>
           </Box>
+          {/* Mobile View - End */}
+
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
-            component="a"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
+              ...theme.typography.logo,
               color: "inherit",
               textDecoration: "none",
             }}
           >
             POLLPAL
           </Typography>
-
+          {/* Desktop View - Start */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
@@ -153,13 +146,15 @@ const NavBar = ({ isAuthenticated }) => {
                   handleCloseNavMenu();
                   handleClikePage(page);
                 }}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: "white", display: "block", ...theme.typography.button }}
               >
-                <Typography variant="subtitle2">{page}</Typography>
+                {page}
               </Button>
             ))}
           </Box>
+          {/* Desktop View - End */}
 
+          {/* User Authentication - Start */}
           {isAuthenticated ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
@@ -211,9 +206,11 @@ const NavBar = ({ isAuthenticated }) => {
               </Link>
             </Box>
           )}
+          {/* User Authentication - End */}
         </Toolbar>
       </Container>
     </AppBar>
   );
 };
+
 export default NavBar;

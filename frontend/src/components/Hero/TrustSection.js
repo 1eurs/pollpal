@@ -1,9 +1,9 @@
 import React from "react";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { Divider, Grid } from "@mui/material";
+import { Typography, Box, Divider, Grid, useTheme } from "@mui/material";
 
 const TrustSection = () => {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -11,52 +11,32 @@ const TrustSection = () => {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        py: "8rem",
+        py: theme.spacing(8),
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary
       }}
     >
-      <Typography variant="subtitle2" align="center" sx={{ mb: "2rem" }}>
+      <Typography variant="subtitle2" align="center" sx={{ mb: theme.spacing(4), fontWeight: 500 }}>
         TRUSTED BY OVER 2 USERS WORLDWIDE
       </Typography>
-      <Grid
-        container
-        maxWidth="lg"
-        sx={{
-          alignItems: "center",
-        }}
-      >
-        <Grid item xs>
-          <Box>
-            <Typography variant="h1" color={"info.main"} align="center">
-              500k+
-            </Typography>
-            <Typography variant="h3" color={"text.secondary"} align="center">
-              Users
-            </Typography>
-          </Box>
-        </Grid>
-        <Divider sx={{ minHeight: "10rem" }} orientation="vertical" flexItem />
-        <Grid item xs>
-          <Box>
-            <Typography variant="h1" color={"info.main"} align="center">
-              500k+
-            </Typography>
-            <Typography variant="h3" color={"text.secondary"} align="center">
-              Users
-            </Typography>
-          </Box>
-        </Grid>
-        <Divider orientation="vertical" flexItem />
-
-        <Grid item xs>
-          <Box>
-            <Typography variant="h1" color={"info.main"} align="center">
-              500k+
-            </Typography>
-            <Typography variant="h3" color={"text.secondary"} align="center">
-              Users
-            </Typography>
-          </Box>
-        </Grid>
+      <Grid container maxWidth="lg" sx={{ alignItems: "center" }}>
+        {Array.from({ length: 3 }).map((_, index) => (
+          <>
+            <Grid item xs>
+              <Box>
+                <Typography variant="h1" color="info.main" align="center">
+                  500k+
+                </Typography>
+                <Typography variant="h3" color="text.secondary" align="center">
+                  Users
+                </Typography>
+              </Box>
+            </Grid>
+            {index < 2 && (
+              <Divider sx={{ mx: theme.spacing(3), minHeight: "10rem" }} orientation="vertical" flexItem />
+            )}
+          </>
+        ))}
       </Grid>
     </Box>
   );

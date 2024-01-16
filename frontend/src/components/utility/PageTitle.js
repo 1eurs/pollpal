@@ -1,15 +1,31 @@
 import React from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { Box, Typography, useTheme } from "@mui/material";
 
-const PageTitle = ({ title, description, textAlign, variant, sx }) => {
+const PageTitle = ({ title, description, textAlign = "center", variant = "h1", sx }) => {
+  const theme = useTheme();
+
+  const titleStyles = {
+    fontWeight: theme.typography.fontWeightMedium, // Adjust the font weight as needed
+    lineHeight: 1.2, // Adjust line height for better readability
+    marginBottom: theme.spacing(1), // Spacing between title and description
+    color: theme.palette.text.primary // Ensuring text color is according to theme
+  };
+
+  const descriptionStyles = {
+    fontSize: '1rem', // Adjust the font size as needed
+    color: theme.palette.text.secondary, // Description color
+    lineHeight: 1.5 // Line height for better readability
+  };
+
   return (
-    <Box
-      sx={{ textAlign: textAlign || "center", pb: "1rem", pt: "3rem", ...sx }}
-    >
-      <Typography variant={variant || "h1"}>{title}</Typography>
+    <Box sx={{ textAlign, pb: theme.spacing(2), pt: theme.spacing(6), ...sx }}>
+      <Typography variant={variant} sx={titleStyles}>
+        {title}
+      </Typography>
       {description && (
-        <Typography variant="subtitle1">{description}</Typography>
+        <Typography variant="subtitle1" sx={descriptionStyles}>
+          {description}
+        </Typography>
       )}
     </Box>
   );

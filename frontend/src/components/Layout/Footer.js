@@ -1,32 +1,31 @@
-import * as React from "react";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import { Box } from "@mui/material";
-
-const footerStyles = {
-  bottom: 0,
-  width: "100%",
-  marginTop: "20px", // Adjust the top margin as needed
-};
+import React from "react";
+import { Container, Typography, Link, Box, useTheme } from "@mui/material";
 
 export default function Footer() {
+  const theme = useTheme();
+
+  const currentYear = new Date().getFullYear();
+
   return (
     <Box
       sx={{
-        ...footerStyles,
-        p: 6,
+        width: '100%',
+        mt: theme.spacing(4),
+        py: theme.spacing(3),
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.secondary,
+        position: 'relative', // Changed to relative for in-flow positioning
+        bottom: 0,
       }}
       component="footer"
     >
-      <Container>
-        <Typography variant="body2" color="text.secondary" align="center">
+      <Container maxWidth="lg">
+        <Typography variant="body2" align="center">
           {"Copyright © "}
           <Link color="inherit" href="https://your-website.com/">
             PollPal
           </Link>
-          &nbsp;
-          {new Date().getFullYear()}
+          &nbsp;{currentYear}
         </Typography>
       </Container>
     </Box>
