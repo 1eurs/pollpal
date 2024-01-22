@@ -20,7 +20,7 @@ const DateElement = ({
       >
         <Box sx={{ display: "flex", gap: 1 }}>
           <Box
-            bgcolor={"secondary.main"}
+            bgcolor={"secondary.dark"}
             p={2}
             borderRadius={2}
             sx={{
@@ -30,7 +30,7 @@ const DateElement = ({
               maxWidth: 100,
             }}
           >
-            <Typography variant="h3">
+            <Typography variant="body1" color='white'>
               {dayjs(element.date).format("MMM D, YY")}
             </Typography>
           </Box>
@@ -43,19 +43,19 @@ const DateElement = ({
           >
             {timeSlot ? (
               <Box
-                bgcolor={"secondary.light"}
+                bgcolor={"secondary.dark"}
                 sx={{ p: 2, borderRadius: 2, width: 100 }}
               >
-                <Typography variant="subtitle2">
-                  from {dayjs(timeSlot.start_time).format("HH:mm")}
-                </Typography>
-                <Typography variant="subtitle2">
-                  to {dayjs(timeSlot.end_time).format("HH:mm")}
-                </Typography>
+    <Typography variant="body1" color={'white'} >
+      {dayjs(timeSlot.start_time).format("HH:mm")} <br />
+      to {dayjs(timeSlot.end_time).format("HH:mm")}
+    </Typography>
+
+
               </Box>
             ) : (
               <Box
-                bgcolor={"secondary.light"}
+                bgcolor={"secondary.dark"}
                 sx={{
                   p: 2,
                   borderRadius: 2,
@@ -63,8 +63,7 @@ const DateElement = ({
                   textAlign: "center",
                 }}
               >
-                <Typography variant="subtitle2">ALL</Typography>
-                <Typography variant="subtitle2">TIME</Typography>
+                <Typography variant="body1" color='white'>ALL<br/> TIME</Typography>
               </Box>
             )}
           </Box>
@@ -74,7 +73,7 @@ const DateElement = ({
         {isResult && (
           <Box sx={{ display: "flex", gap: 1 }}>
             <Box
-              bgcolor={"secondary.main"}
+              bgcolor={"secondary.dark"}
               p={2}
               borderRadius={2}
               sx={{
@@ -84,12 +83,12 @@ const DateElement = ({
               }}
             >
               <Box textAlign={"center"}>
-                <Typography variant="h3">AGREE</Typography>
-                <Typography variant="h3">{element.vote_count_true}</Typography>
+                <Typography color='white' variant="body2">AGREE</Typography>
+                <Typography color='white' variant="body2">{element.vote_count_true}</Typography>
               </Box>
             </Box>
             <Box
-              bgcolor={"secondary.main"}
+              bgcolor={"secondary.dark"}
               p={2}
               borderRadius={2}
               sx={{
@@ -99,8 +98,8 @@ const DateElement = ({
               }}
             >
               <Box textAlign={"center"}>
-                <Typography variant="h3">NOT AGREE</Typography>
-                <Typography variant="h3">{element.vote_count_false}</Typography>
+                <Typography color='white' variant="body2">NOT AGREE</Typography>
+                <Typography color='white' variant="body2">{element.vote_count_false}</Typography>
               </Box>
             </Box>
           </Box>
@@ -116,15 +115,15 @@ const DateElement = ({
               }
               onClick={() => handleSelect(element.id, true)}
             >
-              Agree
+              <Typography variant="body2">Agree</Typography>
             </Button>
-            <Button
+            <Button 
               variant={
                 selectedChoices[element.id] === false ? "contained" : "outlined"
               }
               onClick={() => handleSelect(element.id, false)}
             >
-              Not Agree
+              <Typography variant="body2">Not Agree</Typography>
             </Button>
           </Box>
         )}

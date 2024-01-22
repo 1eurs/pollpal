@@ -15,6 +15,7 @@ import { fetchDates } from "./redux/pollSlice";
 import { useEffect } from "react";
 import DateElement from "./DateElement";
 import RelativeTime from "./utility/RelativeTime";
+import PageTitle from "./utility/PageTitle";
 
 const MeetingPolllResults = ({ polls, dates }) => {
   const dispatch = useDispatch();
@@ -38,11 +39,16 @@ const MeetingPolllResults = ({ polls, dates }) => {
 
   return (
     <Container maxWidth="sm">
+            <PageTitle
+        title="Poll Results"
+        description="See the results of poll."
+        textAlign="center"
+      />
       <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
         <CardContent>
           <Box sx={{ pb: 3 }}>
-            <Typography variant="h2">{selectedPoll?.question}</Typography>
-            <Typography variant="subtitle1">
+            <Typography variant="h6">{selectedPoll?.question}</Typography>
+            <Typography variant="body2">
               by {selectedPoll?.created_by || "a guest"}
               {" · "}
               <RelativeTime timestamp={selectedPoll?.created_at} />

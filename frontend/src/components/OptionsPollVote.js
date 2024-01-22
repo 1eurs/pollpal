@@ -22,7 +22,9 @@ import RelativeTime from "./utility/RelativeTime";
 import MyAlert from "./utility/MyAlert";
 import MyBackdrop from "./utility/MyBackdrop";
 import PageTitle from "./utility/PageTitle";
+
 const OptionsPollVote = ({ polls, choices, votes, comments, replies }) => {
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -97,21 +99,20 @@ const OptionsPollVote = ({ polls, choices, votes, comments, replies }) => {
         title="Vote in the Poll"
         description="Express your opinion by voting in this poll. Make your choice and see the results!"
         textAlign="center"
-        variant="h1"
       />
       <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
         <CardContent>
           <FormControl>
             <Box sx={{ pb: 3 }}>
-              <Typography variant="h2">{selectedPoll?.question}</Typography>
-              <Typography variant="subtitle1">
+              <Typography variant="h5">{selectedPoll?.question}</Typography>
+              <Typography variant="body2">
                 by {selectedPoll?.created_by || "a guest"}
                 {" · "}
                 <RelativeTime timestamp={selectedPoll?.created_at} />
               </Typography>
             </Box>
             <Box sx={{ pb: 1 }}>
-              <Typography variant="subtitle1">Make a choice:</Typography>
+              <Typography variant="body1">Make a choice:</Typography>
             </Box>
 
             <RadioGroup
@@ -130,7 +131,7 @@ const OptionsPollVote = ({ polls, choices, votes, comments, replies }) => {
                   value={option.id}
                   control={<Radio />}
                   label={
-                    <Typography variant="subtitle1">
+                    <Typography variant="body2">
                       {option.choice_text}
                     </Typography>
                   }

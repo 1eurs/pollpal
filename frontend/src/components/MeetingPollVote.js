@@ -17,6 +17,7 @@ import DateElement from "./DateElement";
 import RelativeTime from "./utility/RelativeTime";
 import MyAlert from "./utility/MyAlert";
 import MyBackdrop from "./utility/MyBackdrop";
+import PageTitle from "./utility/PageTitle";
 
 const MeetingPollVote = ({ polls, dates, comments, replies }) => {
   const dispatch = useDispatch();
@@ -93,11 +94,17 @@ const MeetingPollVote = ({ polls, dates, comments, replies }) => {
 
   return (
     <Container maxWidth="sm">
+
+      <PageTitle
+        title="Vote in the Poll"
+        description="Express your opinion by voting in this poll. Make your choice and see the results!"
+        textAlign="center"
+      />
       <Card sx={{ borderTop: 4, borderColor: "primary.main" }}>
         <CardContent>
           <Box sx={{ pb: 3 }}>
-            <Typography variant="h2">{selectedPoll?.question}</Typography>
-            <Typography variant="subtitle1">
+            <Typography variant="h6">{selectedPoll?.question}</Typography>
+            <Typography variant="body2">
               by {selectedPoll?.created_by || "a guest"}
               {" · "}
               <RelativeTime timestamp={selectedPoll?.created_at} />

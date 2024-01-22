@@ -32,7 +32,7 @@ export const themeOptions = {
     divider: "#C8C8C8", 
   },
   typography: {
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    fontFamily: "'Rubik', 'Roboto', 'Helvetica', 'Arial', sans-serif",
     
     logo: { fontSize: "2rem" },
     
@@ -40,6 +40,8 @@ export const themeOptions = {
       fontSize: "3.5rem",
       fontWeight: 700,
       lineHeight: 1.1,
+      wordWrap: 'break-word', 
+      whiteSpace: 'normal'
     },
 
     h1: {
@@ -73,10 +75,13 @@ export const themeOptions = {
     },
 
     h6: {
-      fontSize: "1rem",
-      fontWeight: 500,
-      lineHeight: 1.6,
+      fontSize: "1.1rem", 
+      fontWeight: 500,   
+      lineHeight: 1.4,    
+      wordWrap: 'break-word', 
+      margin: '0.2rem 0',  
     },
+    
 
     subtitle1: {
       fontSize: "1rem",

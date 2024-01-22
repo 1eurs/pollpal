@@ -15,6 +15,11 @@ import {
   Container,
   MenuItem,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import PageTitle from "./utility/PageTitle";
 import OptionsForm from "./Forms/OptionsForm";
@@ -54,6 +59,9 @@ const CreateForm = ({ user }) => {
 
   const [datesFormData, setDatesFormData] = useState([]);
 
+  const [isFormIncomplete, setFormIncomplete] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
@@ -64,8 +72,24 @@ const CreateForm = ({ user }) => {
     setMeetingForm(selectedVotingType === "dates");
   };
 
+  const isFormValid = () => {
+    if (!title || optionsFormData.options.length < 2) {
+      setFormIncomplete(true);
+      return false;
+    }
+    setFormIncomplete(false);
+    return true;
+  };
+
   const handleCreate = (e, isActive = true, isDraft) => {
     e.preventDefault();
+    const formIsValid = isFormValid();
+
+    if (!formIsValid) {
+      setAlertOpen(true);
+      return;
+    }
+
     let pollData = {
       question: title,
       poll_type: isMeetingForm ? "dates" : "choices",
@@ -180,6 +204,22 @@ const CreateForm = ({ user }) => {
         votingSecurityOption={votingSecurityOption}
         setVotingSecurityOption={setVotingSecurityOption}
       />
+      <Dialog
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle>Incomplete Form</DialogTitle>
+        <DialogContent>
+          <p>Please complete all required fields before submitting the form.</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAlertOpen(false)} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

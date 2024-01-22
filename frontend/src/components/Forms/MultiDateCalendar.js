@@ -11,7 +11,10 @@ import AddIcon from "@mui/icons-material/Add";
 function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
   const handleAddTime = (index) => {
     const newDatesWithTimeSlots = [...datesWithTimeSlots];
-    newDatesWithTimeSlots[index].times.push({});
+    newDatesWithTimeSlots[index].times.push({
+      start_time: null,
+      end_time: null,
+    });
     setDatesWithTimeSlots(newDatesWithTimeSlots);
   };
 
@@ -21,6 +24,10 @@ function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
       newDatesWithTimeSlots[index].times.splice(timeSlotIndex, 1);
       return newDatesWithTimeSlots;
     });
+  };
+
+  const validateTimeSlot = (timeSlot) => {
+    return timeSlot.start_time && timeSlot.end_time && timeSlot.start_time < timeSlot.end_time;
   };
 
   const handleDateSelect = (date) => {
@@ -64,18 +71,18 @@ function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           {datesWithTimeSlots.map((item, index) => (
             <>
-              <Box key={index} sx={{ display: "flex", gap: 2, p: 4 }}>
+              <Box key={index} sx={{ display: "flex", gap: 2, p: 2 }}>
                 <Box
-                  bgcolor={"secondary.main"}
-                  p={2}
-                  borderRadius={2}
+                  bgcolor={"background.default"}
+                  p={0.5}
+                  borderRadius={1}
                   sx={{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="h3">
+                  <Typography variant="body1" sx={{ p: 1 }}>
                     {item.date?.format("MMM DD")}
                   </Typography>
                 </Box>
@@ -88,64 +95,67 @@ function CalendarForm({ datesWithTimeSlots, setDatesWithTimeSlots }) {
                 >
                   {item.times.length > 0 ? (
                     item.times.map((timeSlot, timeSlotIndex) => (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          gap: 1,
-                          alignItems: "center",
-                        }}
-                        key={timeSlotIndex}
-                      >
-                        <TimePicker
-                          ampm={false}
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                              style: { fontSize: "6px" },
-                            },
-                          }}
-                          value={item.date}
-                          onChange={(newValue) => {
-                            const newTimeSlots = [...datesWithTimeSlots];
-                            newTimeSlots[index].times[
-                              timeSlotIndex
-                            ].start_time = newValue;
-                            setDatesWithTimeSlots(newTimeSlots);
-                          }}
-                        />
-                        <TimePicker
-                          ampm={false}
-                          slotProps={{ textField: { size: "small" } }}
-                          value={item.date}
-                          onChange={(newValue) => {
-                            const newTimeSlots = [...datesWithTimeSlots];
-                            newTimeSlots[index].times[timeSlotIndex].end_time =
-                              newValue;
-                            setDatesWithTimeSlots(newTimeSlots);
-                          }}
-                        />
-                        <Button
-                          onClick={() =>
-                            handleDeleteTimeSlot(index, timeSlotIndex)
-                          }
-                        >
-                          Delete
-                        </Button>
+                      <Box key={timeSlotIndex}>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <TimePicker
+                            ampm={false}
+                            value={timeSlot.start_time}
+                            onChange={(newValue) => {
+                              const newTimeSlots = [...datesWithTimeSlots];
+                              newTimeSlots[index].times[timeSlotIndex].start_time = newValue;
+                              setDatesWithTimeSlots(newTimeSlots);
+                            }}
+                          />
+                          <TimePicker
+                            ampm={false}
+                            value={timeSlot.end_time}
+                            onChange={(newValue) => {
+                              const newTimeSlots = [...datesWithTimeSlots];
+                              newTimeSlots[index].times[timeSlotIndex].end_time = newValue;
+                              setDatesWithTimeSlots(newTimeSlots);
+                            }}
+                          />
+                        </Box>
+                        {validateTimeSlot(timeSlot) ? (
+                          <Button
+                            sx={{ width: '100%', mt: 1, backgroundColor: "info.main" }}
+                            size="small"
+                            variant="contained"
+                            onClick={() =>
+                              handleDeleteTimeSlot(index, timeSlotIndex)
+                            }
+                          >
+                            Delete
+                          </Button>
+                        ) : (
+                          <Typography variant="body2" color="error">
+                            Invalid time slot
+                          </Typography>
+                        )}
                       </Box>
                     ))
                   ) : (
-                    <Typography>ALL TIME</Typography>
-                  )}
-                  <Box>
-                    <Button
-                      startIcon={<AddIcon />}
-                      size="small"
-                      variant="contained"
-                      onClick={() => handleAddTime(index)}
+                    <Box
+                      bgcolor={"background.default"}
+                      p={0.5}
+                      borderRadius={1}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
                     >
-                      Add times
-                    </Button>
-                  </Box>
+                      <Typography variant="subtitle2">ALL TIME</Typography>
+                    </Box>
+                  )}
+                  <Button
+                    startIcon={<AddIcon />}
+                    size="small"
+                    variant="contained"
+                    onClick={() => handleAddTime(index)}
+                  >
+                    Add times
+                  </Button>
                 </Box>
               </Box>
             </>
