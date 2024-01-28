@@ -24,6 +24,7 @@ import EditMeetingPollForm from "./components/EditMeetingPollForm";
 import Signup from "./components/Auth/Signup";
 import Login from "./components/Auth/Login";
 import Layout from "./components/Layout/Layout";
+import Demo from "./components/Demo";
 const App = () => {
   const dispatch = useDispatch();
 
@@ -47,6 +48,7 @@ const App = () => {
         <Layout isAuthenticated={isAuthenticated} user={user}>
           <Routes>
             <Route path="/" element={<Hero />} />
+            <Route path="/demo" element={<Demo />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/create/poll" element={<CreateForm user={user} />} />

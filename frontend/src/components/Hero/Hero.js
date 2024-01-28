@@ -8,45 +8,61 @@ const Hero = () => {
   const theme = useTheme();
 
   return (
-    <Box sx={{ backgroundColor: theme.palette.background.default, overflow: 'hidden' }}>
-     <Container sx={{ 
-    py: theme.spacing(10), 
-    display: "flex", 
-    flexDirection: ['column', 'row'], 
-    alignItems: "center", 
-    justifyContent: "space-between", 
-    height: '500px', 
-   
-}}>
-        <Box sx={{ maxWidth: "600px", mb: [5, 0], textAlign: 'left' }}>
-        <Box sx={{ spacing: 2 }}> 
-      <Typography variant="Hero" gutterBottom>
-        Polls Made Simple.
-      </Typography>
+    <Box
+      sx={{
+        backgroundColor: theme.palette.background.default,
+        overflow: "hidden",
+      }}
+    >
+      <Container
+        sx={{
+          py: theme.spacing(10),
+          display: "flex",
+          flexDirection: ["column", "row"],
+          alignItems: "center",
+          justifyContent: "space-between",
+          height: "500px",
+        }}
+      >
+        <Box sx={{ maxWidth: "600px", mb: [5, 0], textAlign: "left" }}>
+          <Box sx={{ spacing: 2 }}>
+            <Typography variant="Hero" gutterBottom>
+              Polls Made Simple.
+            </Typography>
 
-      <Typography variant="subtitle1" color="text.secondary" gutterBottom pt={0.4}>
-        Quick Polls, Immediate Results.
-      </Typography>
+            <Typography
+              variant="subtitle1"
+              color="text.secondary"
+              gutterBottom
+              pt={0.4}
+            >
+              Quick Polls, Immediate Results.
+            </Typography>
 
-      <Box sx={{ pt: 2 }}>  
-        <Link to={`create/poll`} style={{ textDecoration: 'none' }}>
-          <Button variant="contained" color="primary" size="large">
-            Create a Poll
-          </Button>
-        </Link>
-      </Box>
-    </Box>
+            <Box sx={{ pt: 2 }}>
+              <Link to={`create/poll`} style={{ textDecoration: "none" }}>
+                <Button variant="contained" color="primary" size="large">
+                  Create a Poll
+                </Button>
+              </Link>
+            </Box>
+          </Box>
         </Box>
-        <Box sx={{ width: '75%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <EmbeddedPoll poll_id='e87ca5ad-bce3-467f-9d19-cfcc0c6eb28f'/>
-      </Box>
+        <Box
+          sx={{
+            width: "75%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <EmbeddedPoll poll_id="76043bd5-ed5d-40bb-86c1-4ae60e4bfe77" />
+        </Box>
       </Container>
       <FeaturesSection />
       <GetStartedSection />
     </Box>
   );
 };
-
-
 
 export default Hero;
