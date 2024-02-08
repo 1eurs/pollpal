@@ -1,5 +1,18 @@
 import * as React from "react";
-import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, useTheme } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  Container,
+  Avatar,
+  Button,
+  Tooltip,
+  MenuItem,
+  useTheme,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HowToVoteIcon from "@mui/icons-material/HowToVote";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,7 +20,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
 import AdbIcon from "@mui/icons-material/Adb";
 
-const pages = ["Create Poll", "Demo", "Pricing"];
+const pages = [];
 const settings = ["Dashboard", "Logout"];
 
 const NavBar = ({ isAuthenticated }) => {
@@ -146,7 +159,12 @@ const NavBar = ({ isAuthenticated }) => {
                   handleCloseNavMenu();
                   handleClikePage(page);
                 }}
-                sx={{ my: 2, color: "white", display: "block", ...theme.typography.button }}
+                sx={{
+                  my: 2,
+                  color: "white",
+                  display: "block",
+                  ...theme.typography.button,
+                }}
               >
                 {page}
               </Button>
