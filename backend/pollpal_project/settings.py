@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', get_random_secret_key())
 
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "[*]").split(" ")
 
 
 # Application definition
@@ -66,6 +66,9 @@ MIDDLEWARE = [
 
 
 ALLOWED_HOSTS = ["*"]
+CORS_ALLOWED_ORIGINS = [
+   "https://pollpal.vercel.app",
+]
 
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = "pollpal_project.urls"
@@ -91,10 +94,10 @@ WSGI_APPLICATION = "pollpal_project.wsgi.application"
 # Database
 
 import dj_database_url
-
+DATABASE_URL = "postgres://pollpal_user:9lBXQGcRTGWKKLVm9EzPt3H5zpdDqmyl@dpg-cn5bjdun7f5s738h2clg-a.frankfurt-postgres.render.com/pollpal"
 # settings.py
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL',DATABASE_URL))
 }
 
 
