@@ -94,7 +94,6 @@ const MeetingPollVote = ({ polls, dates, comments, replies }) => {
 
   return (
     <Container maxWidth="sm">
-
       <PageTitle
         title="Vote in the Poll"
         description="Express your opinion by voting in this poll. Make your choice and see the results!"
@@ -173,7 +172,10 @@ const MeetingPollVote = ({ polls, dates, comments, replies }) => {
           </Box>
         </CardContent>
       </Card>
-      <SharePoll can_share={selectedPoll.can_share} />
+      <SharePoll
+        selectedPoll={selectedPoll}
+        can_share={selectedPoll.can_share}
+      />
       <CommentPoll
         selectedPoll={selectedPoll}
         comments={comments}

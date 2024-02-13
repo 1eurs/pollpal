@@ -39,7 +39,7 @@ const MeetingPolllResults = ({ polls, dates }) => {
 
   return (
     <Container maxWidth="sm">
-            <PageTitle
+      <PageTitle
         title="Poll Results"
         description="See the results of poll."
         textAlign="center"
@@ -82,7 +82,7 @@ const MeetingPolllResults = ({ polls, dates }) => {
           </Box>
         </CardContent>
       </Card>
-      <SharePoll />
+      <SharePoll selectedPoll={selectedPoll} />
     </Container>
   );
 };

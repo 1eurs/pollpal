@@ -139,7 +139,7 @@ const OptionsPollResutls = ({ polls, choices }) => {
           </CardContent>
         </Card>
       </Box>
-      <SharePoll />
+      <SharePoll selectedPoll={selectedPoll} />
     </Container>
   );
 };
