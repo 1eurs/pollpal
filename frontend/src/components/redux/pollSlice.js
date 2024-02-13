@@ -14,7 +14,7 @@ export const performApiRequest = async (url, method, data) => {
       url: `${API}/${url}`,
       method,
       data,
-      hwaders: {
+      headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         ...axiosConfig.headers,
       },
