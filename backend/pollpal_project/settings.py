@@ -67,9 +67,8 @@ MIDDLEWARE = [
 
 ALLOWED_HOSTS = ["*"]
 
-CORS_ALLOWED_ORIGINS = [
-   "https://pollpal.vercel.app","https://pollpal.onrender.com/api/polls","https://pollpal.onrender.com/api/choices","https://pollpal.onrender.com/api/votes","https://pollpal.onrender.com/api/comments/top-level","https://pollpal.onrender.com/api/replies","https://pollpal.onrender.com/api/polls","https://pollpal.onrender.com/api/choices","https://pollpal.onrender.com/api/dates","https://pollpal.onrender.com/api/votes","https://pollpal.onrender.com/api/datevotes","https://pollpal.onrender.com/api/comments/top-level","https://pollpal.onrender.com/api/replies"
-]
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = "pollpal_project.urls"
