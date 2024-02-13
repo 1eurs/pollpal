@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 CORS_ALLOWED_ORIGINS = [
-    "https://pollpal.onrender.com"
+    "pollpal.onrender.com"
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
@@ -22,6 +22,7 @@ CORS_ALLOW_METHODS = [
 'PUT',
 ]
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+
 DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
