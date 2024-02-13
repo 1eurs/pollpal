@@ -44,14 +44,14 @@ export const createPollWithChoices = createAsyncThunk(
 );
 
 export const fetchPolls = createAsyncThunk("polls/fetch", async () =>
-  performApiRequest("api/polls", "get")
+  performApiRequest("api/polls/", "get")
 );
 export const DeletePoll = createAsyncThunk("polls/delete", async (poll_id) =>
   performApiRequest("api/polls", "delete", poll_id)
 );
 
 export const fetchChoices = createAsyncThunk("choices/fetch", async () =>
-  performApiRequest("api/choices", "get")
+  performApiRequest("api/choices/", "get")
 );
 
 export const voteInPoll = createAsyncThunk("polls/vote", async (voteData) =>
@@ -59,11 +59,11 @@ export const voteInPoll = createAsyncThunk("polls/vote", async (voteData) =>
 );
 
 export const fetchVotes = createAsyncThunk("votes/fetch", async () =>
-  performApiRequest("api/votes", "get")
+  performApiRequest("api/votes/", "get")
 );
 
 export const fetchDates = createAsyncThunk("dates/fetch", async () =>
-  performApiRequest("api/dates", "get")
+  performApiRequest("api/dates/", "get")
 );
 
 export const voteInDatesPoll = createAsyncThunk(
@@ -72,15 +72,15 @@ export const voteInDatesPoll = createAsyncThunk(
 );
 
 export const fetchDateVotes = createAsyncThunk("datevotes/fetch", async () =>
-  performApiRequest("api/datevotes", "get")
+  performApiRequest("api/datevotes/", "get")
 );
 
 export const fetchComments = createAsyncThunk("comments/fetch", async () =>
-  performApiRequest("api/comments/top-level", "get")
+  performApiRequest("api/comments/top-level/", "get")
 );
 
 export const fetchReplies = createAsyncThunk("reply/fetch", async () =>
-  performApiRequest(`api/replies`, "get")
+  performApiRequest(`api/replies/`, "get")
 );
 
 export const createComments = createAsyncThunk(
