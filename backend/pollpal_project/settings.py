@@ -1,5 +1,4 @@
 import os
-from django.core.management.utils import get_random_secret_key
 from datetime import timedelta
 from pathlib import Path
 import os
@@ -8,12 +7,14 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = os.environ.get('SECRET_KEY', get_random_secret_key())
+SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-ALLOWED_HOSTS = ['https://pollpal.onrender.com']
-
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+DATABASES = {
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+}
 
 
 # Application definition
@@ -65,11 +66,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "pollpal_project.wsgi.application"
 
-# Database
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-}
 
 
 # Password validation
