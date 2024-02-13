@@ -56,7 +56,7 @@ const Hero = () => {
             alignItems: "center",
           }}
         >
-          <EmbeddedPoll poll_id="76043bd5-ed5d-40bb-86c1-4ae60e4bfe77" />
+          <EmbeddedPoll poll_id="6f4b07e2-1c4c-47e2-b306-6b5be307b357" />
         </Box>
       </Container>
       <FeaturesSection />
