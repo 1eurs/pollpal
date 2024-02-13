@@ -18,7 +18,7 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 
 const SharePoll = ({ selectedPoll }) => {
   let url;
-  if (selectedPoll.poll_type === "choices") {
+  if (selectedPoll?.poll_type === "choices") {
     url = `https://pollpal.vercel.app/vote/options/${selectedPoll.id}`;
   } else {
     url = `https://pollpal.vercel.app/vote/dates/${selectedPoll.id}`;
