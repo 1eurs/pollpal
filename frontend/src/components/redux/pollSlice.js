@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const API = "http://127.0.0.1:8000";
+export const API = "https://pollpal.onrender.com";
 const axiosConfig = {
   headers: {
     "Content-Type": "application/json",
