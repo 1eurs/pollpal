@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     'corsheaders.middleware.CorsMiddleware',
+    'pollpal.middleware.CustomCorsMiddleware'
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware", 
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -74,10 +75,8 @@ WSGI_APPLICATION = "pollpal_project.wsgi.application"
 
 # Database
 
-DATABASE_URL = "postgres://pollpal_user:9lBXQGcRTGWKKLVm9EzPt3H5zpdDqmyl@dpg-cn5bjdun7f5s738h2clg-a.frankfurt-postgres.render.com/pollpal"
-# settings.py
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL',DATABASE_URL))
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 
