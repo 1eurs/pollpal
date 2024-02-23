@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Box, Divider, Grid, useTheme } from "@mui/material";
+import { Typography, Box, Divider, Grid } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const TrustSection = () => {
   const theme = useTheme();
@@ -13,10 +14,14 @@ const TrustSection = () => {
         flexDirection: "column",
         py: theme.spacing(8),
         backgroundColor: theme.palette.background.paper,
-        color: theme.palette.text.primary
+        color: theme.palette.text.primary,
       }}
     >
-      <Typography variant="subtitle2" align="center" sx={{ mb: theme.spacing(4), fontWeight: 500 }}>
+      <Typography
+        variant="subtitle2"
+        align="center"
+        sx={{ mb: theme.spacing(4), fontWeight: 500 }}
+      >
         TRUSTED BY OVER 2 USERS WORLDWIDE
       </Typography>
       <Grid container maxWidth="lg" sx={{ alignItems: "center" }}>
@@ -33,7 +38,11 @@ const TrustSection = () => {
               </Box>
             </Grid>
             {index < 2 && (
-              <Divider sx={{ mx: theme.spacing(3), minHeight: "10rem" }} orientation="vertical" flexItem />
+              <Divider
+                sx={{ mx: theme.spacing(3), minHeight: "10rem" }}
+                orientation="vertical"
+                flexItem
+              />
             )}
           </>
         ))}

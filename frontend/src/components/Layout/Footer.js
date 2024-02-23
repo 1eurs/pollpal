@@ -9,12 +9,12 @@ export default function Footer() {
   return (
     <Box
       sx={{
-        width: '100%',
+        width: "100%",
         mt: theme.spacing(4),
         py: theme.spacing(3),
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.secondary,
-        position: 'relative', // Changed to relative for in-flow positioning
+        position: "relative", // Changed to relative for in-flow positioning
         bottom: 0,
       }}
       component="footer"
@@ -22,7 +22,7 @@ export default function Footer() {
       <Container maxWidth="lg">
         <Typography variant="body2" align="center">
           {"Copyright © "}
-          <Link color="inherit" href="https://your-website.com/">
+          <Link color="inherit" href="">
             PollPal
           </Link>
           &nbsp;{currentYear}
